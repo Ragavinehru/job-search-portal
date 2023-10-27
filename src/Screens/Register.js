@@ -4,10 +4,16 @@ import {
     ScrollView,
     Text,
     TextInput,
-    TouchableHighlight,
-    View
+    TouchableHighlight, TouchableOpacity,
+    View, Image
 } from 'react-native';
 import { supabase } from '../../supabase';
+import STYLES from '../styles';
+import COLORS from '../colors/color';
+import LottieView from 'lottie-react-native';
+
+
+
 
 const Register = () => {
     const [isUserModalVisible, setUserModalVisible] = useState(false);
@@ -18,7 +24,7 @@ const Register = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    // const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState([]);
     // useEffect(() => {
     //     async function fetchTasks() {
     //         const { data, error } = await supabase.from('users').select('*');
@@ -62,16 +68,25 @@ const Register = () => {
         setUserModalVisible(false);
     };
     return (
-        <ScrollView>
 
-            <View>
-                <Text>Job Portal</Text>
-                <View style={{ flexDirection: 'row', marginTop: 20, justifyContent: 'space-around' }}>
-                    <TouchableHighlight onPress={toggleUserModal}>
-                        <Text>User</Text>
+        <View style={{ flex: 1 }}>
+            <View style={STYLES.containereg}>
+
+                <Image stle={STYLES.front} source={require('../assets/reg.png')}></Image>
+                {/* <LottieView
+        source={require('./path/to/your-animation.json')}
+        autoPlay
+        loop
+      /> */}
+            </View>
+            <View style={{ marginTop: 100 }}>
+                <Text style={{ fontSize: 22, color: COLORS.dark, marginTop: 72, marginRight: 10, alignSelf: 'center' }}>Please select purpose of app</Text>
+                <View style={{ flexDirection: 'row', marginTop: 70, justifyContent: 'space-around' }}>
+                    <TouchableHighlight style={STYLES.cloudButton} onPress={toggleUserModal}>
+                        <Text style={STYLES.buttonText}>User</Text>
                     </TouchableHighlight>
-                    <TouchableHighlight onPress={toggleEmployerModal}>
-                        <Text>Employer</Text>
+                    <TouchableHighlight style={STYLES.cloudButton} onPress={toggleEmployerModal}>
+                        <Text style={STYLES.buttonText}>Employer</Text>
                     </TouchableHighlight>
                 </View>
             </View>
@@ -82,7 +97,7 @@ const Register = () => {
                     transparent={true}
                     visible={isUserModalVisible}
                     onRequestClose={toggleUserModal}>
-                    <View style={{ backgroundColor: 'pink', height: 100, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ backgroundColor: COLORS.dark, height: '100%', width: '100%', flex: 1, alignSelf: 'center' }}>
 
                         <TextInput
                             placeholder="Email"
@@ -95,10 +110,15 @@ const Register = () => {
                             value={password}
                             onChangeText={setPassword}
                         />
-                        <Button title="Sign Up" onPress={handleSignUp} />
-                        <TouchableHighlight onPress={userModal}>
-                            <Text style={{ color: 'red' }}>Close</Text>
-                        </TouchableHighlight>
+                        <View style={{ flexDirection: 'row', marginTop: 100 }}>
+                            <TouchableOpacity style={STYLES.cloudButton} onPress={handleSignUp}>
+                                <Text style={STYLES.buttonText}>Register</Text>
+                            </TouchableOpacity>
+
+                            <TouchableHighlight style={STYLES.cloudButton} onPress={userModal}>
+                                <Text style={STYLES.buttonText}>Close</Text>
+                            </TouchableHighlight>
+                        </View>
                     </View>
 
                 </Modal>
@@ -129,8 +149,8 @@ const Register = () => {
                     </View>
                 </Modal>
             </View>
+        </View>
 
-        </ScrollView>
     );
 
 }
