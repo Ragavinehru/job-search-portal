@@ -13,6 +13,23 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    // const [email, setEmail] = useState('');
+
+    const handleResetPassword = async () => {
+        try {
+            const { error } = await supabase.auth.api.resetPasswordForEmail(email);
+
+            if (error) {
+                console.error('Error sending password reset email:', error.message);
+                Alert.alert('Password Reset Failed', 'Please check the email address you provided.');
+            } else {
+                Alert.alert('Password Reset', 'An email with instructions has been sent to your email address.');
+            }
+        } catch (error) {
+            console.error('Error handling password reset:', error);
+        }
+    };
+
     const handleLogin = async () => {
         try {
             const { user, error } = await supabase.auth.signInWithPassword({
@@ -58,7 +75,9 @@ const Login = () => {
                     value={password}
                     onChangeText={(text) => setPassword(text)}
                 />
-
+                <TouchableOpacity onPress={handleResetPassword}>
+                    <Text style={{ marginLeft: '58%', marginTop: 2, color: COLORS.dark }}>Forget Password..?</Text>
+                </TouchableOpacity>
             </View>
             {/* <Button title="Login" onPress={handleLogin} /> */}
             <TouchableOpacity style={STYLES.cloudButton} onPress={handleLogin}>
