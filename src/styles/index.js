@@ -19,6 +19,7 @@ const STYLES = StyleSheet.create({
     front: {
         height: 200,
         width: 200,
+        marginTop: 12,
         alignSelf: 'center',
 
     },
@@ -73,7 +74,7 @@ const STYLES = StyleSheet.create({
         backgroundColor: COLORS.light,
         borderRadius: 20,
         padding: 14,
-        width: '26%',
+        width: '27%',
         marginTop: -42,
         alignSelf: 'center'
     },
@@ -106,6 +107,14 @@ const STYLES = StyleSheet.create({
     },
     searchimg: {
         width: 45, height: 33,
+    },
+    postinput: {
+        borderBottomWidth: 1, // Add a 1-pixel underline
+        borderColor: COLORS.light, // Border color
+        padding: 12,
+        fontSize: 16,
+        width: '85%',
+        alignSelf: 'center'
     },
 })
 

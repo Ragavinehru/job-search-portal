@@ -32,16 +32,22 @@ const Login = () => {
 
     const handleLogin = async () => {
         try {
+            console.log("email", email, password);
             const { user, error } = await supabase.auth.signInWithPassword({
                 email,
                 password,
-            });
 
+            });
+            console.log("user supabase", user, error);
             if (error) {
                 console.error('Error signing in:', error.message);
                 Alert.alert('Sign In Failed', 'Invalid credentials. Please try again.');
-            } else {
-                console.log('User signed in:', user);
+            }
+            else if (!user) {
+                console.error('User object is undefined. Login failed.');
+            }
+            else {
+                console.log('User signed in:', user.id);
                 Alert.alert('Sign In Successful', 'You are now signed in.');
 
                 // navigation.navigate('Home');

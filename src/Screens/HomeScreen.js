@@ -16,6 +16,57 @@ import { Alert } from 'react-native';
 
 
 const HomeScreen = () => {
+
+    const [post, setpost] = useState(false);
+    const [jobtitle, setjobtitle] = useState('');
+    const [des, setdes] = useState('');
+    const [exp, setexp] = useState('');
+    const [loca, setloca] = useState('');
+    const [contact, setcontact] = useState('');
+    const [comname, setcomname] = useState('');
+    const [pack, setpackage] = useState('');
+    const [openings, setopening] = useState('');
+    const [edu, setedu] = useState('');
+    const [skills, setskills] = useState('');
+
+
+    const postjob = () => {
+        setpost(true);
+    };
+    const viewapplied = () => {
+
+    };
+    const postj = async () => {
+        try {
+
+            const jobDetails = {
+                title: jobtitle,
+                description: des,
+                experience: exp,
+                contact: contact,
+                location: loca,
+                company_name: comname,
+                package: pack,
+                openings: openings,
+                education: edu,
+                skills: skills,
+            };
+
+
+            const { data, error } = await supabase.from('jobs').insert([jobDetails]);
+
+            if (error) {
+                console.error('Error posting job:', error.message);
+                Alert.alert('Job Posting Failed', 'There was an issue posting the job. Please try again.');
+            } else {
+                console.log('Job posted successfully:', data);
+                Alert.alert('Job Posted', 'Your job has been posted successfully.');
+                setpost(false);
+            }
+        } catch (error) {
+            console.error('Error posting job:', error);
+        }
+    };
     return (
         <SafeAreaView style={{ width: '100%', height: '100%' }}>
 
@@ -32,20 +83,100 @@ const HomeScreen = () => {
 
                     </Text>
                 </View>
-                <Text style={{ marginTop: 5, fontSize: 20, color: COLORS.light }}>
-                    What Jobs you looking for?
+                <Text style={{ marginTop: 5, fontSize: 17, color: COLORS.light }}>
+                    Post a Job,Find perfect candidate!
                 </Text>
                 <Image style={STYLES.person} source={require('../assets/person.png')}></Image>
             </View>
 
             <View>
-
-                <Image style={STYLES.searchimg} source={require('../assets/search.png')} />
-                <TextInput placeholder="Search" style={{ borderBottomColor: 'black' }} />
-
-
+                <TouchableOpacity style={STYLES.cloudButton} onPress={postjob}>
+                    <Text style={STYLES.buttonText}>Post Job</Text>
+                </TouchableOpacity>
             </View>
 
+            <View style={{ marginTop: 88 }}>
+                <TouchableOpacity style={STYLES.cloudButton} onPress={viewapplied}>
+                    <Text style={STYLES.buttonText}>View candidate</Text>
+                </TouchableOpacity>
+            </View>
+
+
+            <Modal visible={post} transparent={false} animationType="slide" onRequestClose={() => setpost(false)}>
+                <Text style={{ fontSize: 22, color: COLORS.dark, marginTop: 82, marginRight: 10, alignSelf: 'center' }}>Post A Job</Text>
+                <View style={{ marginTop: 23 }}>
+                    <TextInput
+                        style={STYLES.postinput}
+                        placeholder="Job Title"
+                        value={jobtitle}
+                        onChangeText={setjobtitle}
+                    />
+                    <TextInput
+                        style={STYLES.postinput}
+                        placeholder="Description"
+                        value={des}
+                        onChangeText={setdes}
+                    />
+
+                    <TextInput
+                        style={STYLES.postinput}
+                        placeholder="Experience"
+                        value={exp}
+                        onChangeText={setexp}
+                    />
+                    <TextInput
+                        style={STYLES.postinput}
+                        placeholder="Contact"
+                        value={contact}
+                        onChangeText={setcontact}
+                    />
+                    <TextInput
+                        style={STYLES.postinput}
+                        placeholder="Location"
+                        value={loca}
+                        onChangeText={setloca}
+                    />
+                    <TextInput
+                        style={STYLES.postinput}
+                        placeholder="Company Name"
+                        value={comname}
+                        onChangeText={setcomname}
+                    />
+                    <TextInput
+                        style={STYLES.postinput}
+                        placeholder="Package"
+                        value={pack}
+                        onChangeText={setpackage}
+                    />
+                    <TextInput
+                        style={STYLES.postinput}
+                        placeholder="Openings"
+                        value={openings}
+                        onChangeText={setopening}
+                    />
+                    <TextInput
+                        style={STYLES.postinput}
+                        placeholder="Education"
+                        value={edu}
+                        onChangeText={setedu}
+                    />
+                    <TextInput
+                        style={STYLES.postinput}
+                        placeholder="Skills"
+                        value={skills}
+                        onChangeText={setskills}
+                    />
+                </View>
+                <View style={{ flexDirection: 'row', marginTop: 77, alignSelf: 'center' }}>
+                    <TouchableOpacity style={STYLES.cloudButton}>
+                        <Text style={STYLES.buttonText} onPress={postj}>Post</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={{ ...STYLES.cloudButton, marginLeft: 12 }} >
+                        <Text style={STYLES.buttonText} onPress={() => setpost(false)}>Close</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
 
         </SafeAreaView>
     )
