@@ -6,32 +6,17 @@ import login from './src/Screens/Login';
 import Search from './Test2';
 import register from './src/Screens/Register';
 import 'react-native-url-polyfill/auto';
-// import 'react-native-get-random-values';
+
 import { supabase } from '../../supabase';
-import HomeScreen from './src/Screens/HomeScreen';
+import HomeScreen from './src/Screens/EmployerScreen';
+import UserScreen from './src/Screens/UserScreen';
 
 
-// const supabaseUrl = 'YOUR_SUPABASE_URL';
-// const supabaseUrl = "https://jmmmahusotnqiiyjmnnh.supabase.co"
-// const supabaseKey = 'SUPABASE_CLIENT_API_KEY'
-// const supabase = createClient(supabaseUrl, supabaseKey);
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-  // const getitems = async () => {
-  //   let { data: users, error } = await supabase
-  //     .from('users')
-  //     .select('id')
 
-  //   return users
-  // }
-  // useEffect(() => {
-  //   getitems()
-  //     .then((items) => {
-  //       console.log("users", users)
-  //     })
-  // }, [])
 
 
   return (
@@ -40,6 +25,7 @@ const App = () => {
         <Stack.Screen name="login" component={login} />
         <Stack.Screen name="home" component={HomeScreen} />
         <Stack.Screen name="register" component={register} />
+        <Stack.Screen name="userscreen" component={UserScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   )

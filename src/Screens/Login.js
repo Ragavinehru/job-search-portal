@@ -32,31 +32,91 @@ const Login = () => {
 
     const handleLogin = async () => {
         try {
-            console.log("email", email, password);
-            const { user, error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
 
             });
-            console.log("user supabase", user, error);
-            if (error) {
-                console.error('Error signing in:', error.message);
-                Alert.alert('Sign In Failed', 'Invalid credentials. Please try again.');
-            }
-            else if (!user) {
-                console.error('User object is undefined. Login failed.');
-            }
-            else {
-                console.log('User signed in:', user.id);
-                Alert.alert('Sign In Successful', 'You are now signed in.');
 
-                // navigation.navigate('Home');
-                navigation.navigate('home');
+            console.log("data user", data.user.id, error)
+            const userId = data.user.id;
+            global.userId = userId;
+            console.log('User ID:', userId);
+
+            const { data1, error1 } = await supabase
+                .from('employers')
+                .select('*')
+                .eq('userId', userId)
+                .single()
+
+            console.log("userdata", data1);
+
+            if (data1) {
+                Alert.alert('Sign In Successful', 'You are now signed in.');
+                navigation.navigate('userscreen', { userId: userId });
+            } else {
+                Alert.alert('Sign In Successful', 'You are now signed in.');
+                navigation.navigate('home', { userId: userId });
             }
+
+
+
         } catch (error) {
             console.error('Error handling login:', error);
         }
+
     };
+    // const handleLogin = async () => {
+    //     try {
+    //         const { data, error } = await supabase.auth.signInWithPassword({
+    //             email: email,
+    //             password: password,
+    //         });
+
+    //         if (error) {
+    //             console.error('Error signing in:', error.message);
+    //             return;
+    //         }
+
+    //         const userId = data.user.id;
+    //         global.userId = userId;
+    //         console.log('User ID:', userId);
+
+    //         const { data: userData, error: userError } = await supabase
+    //             .from('users')
+    //             .select('*')
+    //             .eq('userId', userId)
+    //             .single();
+
+    //         const { data: employerData, error: employerError } = await supabase
+    //             .from('employers')
+    //             .select('*')
+    //             .eq('userId', userId)
+    //             .single();
+
+    //         if (userError || employerError) {
+    //             console.error('Error fetching user or employer data:', userError || employerError);
+    //             return;
+    //         }
+
+    //         if (userData) {
+    //             // User exists
+    //             Alert.alert('Sign In Successful', 'You are now signed in as a regular user.');
+    //             navigation.navigate('userscreen', { userId: userId });
+    //         } else if (employerData) {
+    //             // Employer exists
+    //             Alert.alert('Sign In Successful', 'You are now signed in as an employer.');
+    //             navigation.navigate('employerScreen', { userId: userId });
+    //         } else {
+    //             // Neither user nor employer
+    //             Alert.alert('Sign In Successful', 'You are now signed in, but your role is undefined.');
+    //             navigation.navigate('home', { userId: userId });
+    //         }
+    //     } catch (error) {
+    //         console.error('Error handling login:', error);
+    //     }
+    // };
 
     return (
         <View style={{ width: '100%', height: '100%' }}>

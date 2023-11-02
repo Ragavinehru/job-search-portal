@@ -12,10 +12,17 @@ import STYLES from '../styles';
 import COLORS from '../colors/color';
 
 import { Alert } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+
+
 
 
 
 const HomeScreen = () => {
+    const navigation = useNavigation();
+    const route = useRoute();
+    const userId = route.params?.userId;
+
 
     const [post, setpost] = useState(false);
     const [jobtitle, setjobtitle] = useState('');
@@ -50,11 +57,12 @@ const HomeScreen = () => {
                 openings: openings,
                 education: edu,
                 skills: skills,
+                employer_id: userId,
             };
 
 
             const { data, error } = await supabase.from('jobs').insert([jobDetails]);
-
+            console.log("asahs", data);
             if (error) {
                 console.error('Error posting job:', error.message);
                 Alert.alert('Job Posting Failed', 'There was an issue posting the job. Please try again.');

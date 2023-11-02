@@ -83,11 +83,11 @@ const Register = () => {
     };
 
     const handleSignempUp = async () => {
-        const { user, error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-            name: name,
-            location: Location,
+        const { data, error } = await supabase.auth.signUp({
+            email: employeeEmail,
+            password: employeePassword,
+            name: empname,
+            location: emplocation,
             company_name: empcompany,
 
 
@@ -97,9 +97,9 @@ const Register = () => {
             console.error('Error signing up employee:', error.message);
             Alert.alert('Sign Up Failed', 'Please try again.');
         } else {
-            console.log('Signed up employee:', user);
+            console.log('Signed up employee:', data);
             Alert.alert('Sign Up Successful', 'You are now signed Up.');
-            const userId = user.id;
+            // const empId = data.id;
             // const { data, error } = await supabase.from('employers').upsert([
             //     {
             //         userId,
