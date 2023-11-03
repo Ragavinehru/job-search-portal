@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Image, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, Image, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { supabase } from '../../supabase';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import STYLES from '../styles';
 import COLORS from '../colors/color';
 import { Alert } from 'react-native';
 
-
 const Login = () => {
+
     const navigation = useNavigation();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -17,7 +17,7 @@ const Login = () => {
 
     const handleResetPassword = async () => {
         try {
-            const { error } = await supabase.auth.api.resetPasswordForEmail(email);
+            const { error } = await supabase.auth.resetPasswordForEmail(email);
 
             if (error) {
                 console.error('Error sending password reset email:', error.message);
@@ -30,135 +30,114 @@ const Login = () => {
         }
     };
 
+
+
     const handleLogin = async () => {
         try {
-
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password,
-
             });
 
-            console.log("data user", data.user.id, error)
+            if (error) {
+                console.error('Error signing in:', error.message);
+                return;
+            }
+
             const userId = data.user.id;
             global.userId = userId;
             console.log('User ID:', userId);
 
-            const { data1, error1 } = await supabase
+            const { data: userData, error: userError } = await supabase
+                .from('users')
+                .select('*')
+                .eq('userId', userId)
+                .single();
+            console.log('User Data:', userData, userError);
+
+            const { data: employerData, error: employerError } = await supabase
                 .from('employers')
                 .select('*')
                 .eq('userId', userId)
-                .single()
+                .single();
 
-            console.log("userdata", data1);
+            console.log('employer Data:', employerData, employerError);
+            try {
+                if (userData) {
 
-            if (data1) {
-                Alert.alert('Sign In Successful', 'You are now signed in.');
-                navigation.navigate('userscreen', { userId: userId });
-            } else {
-                Alert.alert('Sign In Successful', 'You are now signed in.');
-                navigation.navigate('home', { userId: userId });
+                    Alert.alert('Sign In Successful', 'You are now signed in as a regular user.');
+                    navigation.navigate("userscreen");
+                } else if (employerData) {
+
+                    Alert.alert('Sign In Successful', 'You are now signed in as an employer.');
+                    navigation.navigate('home', { userId: userId });
+                }
+
+                // else {
+                //     
+                //     Alert.alert('Sign In Successful', ');
+                //     navigation.navigate('userscreen', { userId: userId });
+                // }
+            } catch (error) {
+                console.error('Navigation Error:', error);
             }
-
-
 
         } catch (error) {
             console.error('Error handling login:', error);
         }
-
     };
-    // const handleLogin = async () => {
-    //     try {
-    //         const { data, error } = await supabase.auth.signInWithPassword({
-    //             email: email,
-    //             password: password,
-    //         });
-
-    //         if (error) {
-    //             console.error('Error signing in:', error.message);
-    //             return;
-    //         }
-
-    //         const userId = data.user.id;
-    //         global.userId = userId;
-    //         console.log('User ID:', userId);
-
-    //         const { data: userData, error: userError } = await supabase
-    //             .from('users')
-    //             .select('*')
-    //             .eq('userId', userId)
-    //             .single();
-
-    //         const { data: employerData, error: employerError } = await supabase
-    //             .from('employers')
-    //             .select('*')
-    //             .eq('userId', userId)
-    //             .single();
-
-    //         if (userError || employerError) {
-    //             console.error('Error fetching user or employer data:', userError || employerError);
-    //             return;
-    //         }
-
-    //         if (userData) {
-    //             // User exists
-    //             Alert.alert('Sign In Successful', 'You are now signed in as a regular user.');
-    //             navigation.navigate('userscreen', { userId: userId });
-    //         } else if (employerData) {
-    //             // Employer exists
-    //             Alert.alert('Sign In Successful', 'You are now signed in as an employer.');
-    //             navigation.navigate('employerScreen', { userId: userId });
-    //         } else {
-    //             // Neither user nor employer
-    //             Alert.alert('Sign In Successful', 'You are now signed in, but your role is undefined.');
-    //             navigation.navigate('home', { userId: userId });
-    //         }
-    //     } catch (error) {
-    //         console.error('Error handling login:', error);
-    //     }
-    // };
 
     return (
-        <View style={{ width: '100%', height: '100%' }}>
+        <ScrollView style={{ width: '100%' }}>
+            <StatusBar
+                animated={true}
+                backgroundColor={COLORS.light}
+            // barStyle={statusBarStyle}
+            // showHideTransition={statusBarTransition}
+            // hidden={hidden}
+            />
             <View style={STYLES.container}>
-
                 <Image style={STYLES.front} source={require('../assets/front.png')}></Image>
             </View>
-            <Text style={{ fontSize: 23, color: COLORS.dark, marginTop: 282, position: 'absolute', marginLeft: 12 }}>Welcome to JobSearch!</Text>
 
-            <View style={{ padding: 12, marginTop: 110 }}>
+            <Text style={{ fontSize: 23, color: COLORS.dark, marginVertical: 32, marginLeft: 12 }}>Welcome to JobSearch!</Text>
 
+            <View>
                 <TextInput
                     style={STYLES.textvalue}
                     placeholder="Email"
                     value={email}
                     onChangeText={(text) => setEmail(text)}
                 />
+            </View>
+
+            <View>
                 <TextInput
-                    style={STYLES.text2value}
+                    style={STYLES.textvalue}
                     placeholder="Password"
                     secureTextEntry
                     value={password}
                     onChangeText={(text) => setPassword(text)}
                 />
-                <TouchableOpacity onPress={handleResetPassword}>
-                    <Text style={{ marginLeft: '58%', marginTop: 2, color: COLORS.dark }}>Forget Password..?</Text>
-                </TouchableOpacity>
             </View>
+
+            <TouchableOpacity onPress={() => navigation.navigate('forgetpassword')}>
+                <Text style={{ marginLeft: "auto", marginRight: '10%', marginTop: 5, color: COLORS.dark }}>Forget Password..?</Text>
+            </TouchableOpacity>
             {/* <Button title="Login" onPress={handleLogin} /> */}
             <TouchableOpacity style={STYLES.cloudButton} onPress={handleLogin}>
                 <Text style={STYLES.buttonText}>Log In</Text>
             </TouchableOpacity>
 
-            <View>
-                <Text style={{ fontSize: 17, color: COLORS.dark, marginTop: 12, marginRight: 90, alignSelf: 'center' }}>Dont have an account?</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center', marginTop: 20, marginBottom: 30 }}>
+                <Text style={{ fontSize: 17, color: COLORS.dark }}>Dont have an account?</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('register')}>
                     <Text style={STYLES.registerText}>Register here</Text>
                 </TouchableOpacity>
             </View>
             {/* <Image style={{ width: '100%', height: '50%', marginTop: 250 }} source={require('../assets/logo.png')}></Image> */}
 
-        </View >
+        </ScrollView >
     );
 }
 

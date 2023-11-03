@@ -7,6 +7,7 @@ import {
     TouchableHighlight, TouchableOpacity,
     View, Image
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { supabase } from '../../supabase';
 import STYLES from '../styles';
 import COLORS from '../colors/color';
@@ -17,6 +18,8 @@ import { Alert } from 'react-native';
 
 
 const Register = () => {
+    const navigation = useNavigation();
+
     const [isUserModalVisible, setUserModalVisible] = useState(false);
     const [isEmployerModalVisible, setEmployerModalVisible] = useState(false);
 
@@ -25,79 +28,88 @@ const Register = () => {
     const [empname, setEmpname] = useState('');
     const [empcompany, setempcompany] = useState();
     const [emplocation, setemplocation] = useState('');
+    const [empmobile, setempmob] = useState('');
     const [name, setname] = useState('');
     const [mobile, setmobile] = useState('');
     const [Location, setlocation] = useState('');
     const [email, setemail] = useState('');
     const [password, setPassword] = useState('');
     const [users, setUsers] = useState([]);
-    // useEffect(() => {
-    //     async function fetchTasks() {
-    //         const { data, error } = await supabase.from('users').select('*');
-    //         console.log("datattat", data)
-    //         if (error) {
-    //             console.error('Error fetching users:', error.message);
-    //         } else {
-    //             setUsers(data);
-    //         }
-    //     }
-    //     console.log("users", users)
 
-    //     fetchTasks();
-    // }, []);
 
     const handleSignUp = async () => {
-        const { user, error } = await supabase.auth.signUp({
+        console.log("init")
+        const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password,
-            name: name,
-            location: Location,
-            mobile: mobile,
-
-
+            // name: name,
+            // location: Location,
+            // mobile: mobile,
         });
+        console.log('Signed up:', data, error);
 
         if (error) {
             console.error('Error signing up:', error.message);
         } else {
-            console.log('Signed up:', user);
-            const { data, error } = await supabase.from('users').upsert([
+            insertFn(data?.user?.id);
+            console.log("done");
+            // const { res, error } = await supabase.from('users').insert([
+            //     {
+            //         email: email,
+            //         // password: password,
+            //         name: name,
+            //         location: Location,
+            //         mobile: mobile,
+
+            //     }
+            // ]);
+            // setemail('');
+            // setname('');
+            // setmobile('');
+            // setlocation('');
+            // setPassword('');
+            // if (error) {
+            //     console.error('error insert data:', error.message);
+            // }
+        }
+    };
+
+    const insertFn = async (id) => {
+        const { data, error } = await supabase
+            .from('users')
+            .insert([
                 {
                     email: email,
-                    // password: password,
                     name: name,
                     location: Location,
                     mobile: mobile,
-
+                    userId: id,
                 }
-            ]);
-            setemail('');
-            setname('');
-            setmobile('');
-            setlocation('');
-            setPassword('');
-            if (error) {
-                console.error('error insert data:', error.message);
-            }
-        }
-    };
+            ])
+            .select();
+
+        console.log("in :", data, error);
+    }
 
     const handleSignempUp = async () => {
         const { data, error } = await supabase.auth.signUp({
             email: employeeEmail,
             password: employeePassword,
-            name: empname,
-            location: emplocation,
-            company_name: empcompany,
+            // name: empname,
+            // location: emplocation,
+            // company_name: empcompany,
 
 
         });
+
+        console.log("emp", data, error);
 
         if (error) {
             console.error('Error signing up employee:', error.message);
             Alert.alert('Sign Up Failed', 'Please try again.');
         } else {
-            console.log('Signed up employee:', data);
+            insertemp(data?.user?.id);
+            console.log("done");
             Alert.alert('Sign Up Successful', 'You are now signed Up.');
             // const empId = data.id;
             // const { data, error } = await supabase.from('employers').upsert([
@@ -118,12 +130,32 @@ const Register = () => {
             setEmpname('');
             setempcompany('');
             setemplocation('');
+            setempmob('');
 
             // if (error) {
             //     console.error('error insert emp data:', error.message);
             // }
         }
     };
+
+
+    const insertemp = async (id) => {
+        const { data, error } = await supabase
+            .from('employers')
+            .insert([
+                {
+                    email: employeeEmail,
+                    name: empname,
+                    location: emplocation,
+                    company_name: empcompany,
+                    userId: id,
+                    mobile: empmobile,
+                }
+            ])
+            .select();
+
+        console.log("in :", data, error);
+    }
 
 
     const toggleUserModal = () => {
@@ -141,25 +173,31 @@ const Register = () => {
     };
     return (
 
-        <View style={{ flex: 1 }}>
-            <View style={STYLES.containereg}>
+        <ScrollView style={{ width: '100%' }}>
+            {/* <View style={STYLES.containereg}>
+                <Image style={STYLES.front} source={require('../assets/reg.png')} />
+            </View> */}
 
-                <Image stle={STYLES.front} source={require('../assets/reg.png')}></Image>
-                {/* <LottieView
-        source={require('./path/to/your-animation.json')}
-        autoPlay
-        loop
-      /> */}
+            <View style={STYLES.containereg}>
+                <Image style={STYLES.front} source={require('../assets/reg.png')} />
             </View>
-            <View style={{ marginTop: 100 }}>
-                <Text style={{ fontSize: 22, color: COLORS.dark, marginTop: 72, marginRight: 10, alignSelf: 'center' }}>Please register yourself as</Text>
-                <View style={{ flexDirection: 'row', marginTop: 70, justifyContent: 'space-around' }}>
+
+            <View style={{ marginVertical: 100 }}>
+                <Text style={{ fontSize: 22, color: COLORS.dark, textAlign: "center" }}>Please register yourself as</Text>
+
+                <View style={{ flexDirection: 'row', width: '80%', alignSelf: 'center', marginTop: 70, justifyContent: "space-around" }}>
                     <TouchableHighlight style={STYLES.cloudButton} onPress={toggleUserModal}>
                         <Text style={STYLES.buttonText}>User</Text>
                     </TouchableHighlight>
                     <TouchableHighlight style={STYLES.cloudButton} onPress={toggleEmployerModal}>
                         <Text style={STYLES.buttonText}>Employer</Text>
                     </TouchableHighlight>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center', marginTop: 20, marginBottom: 30 }}>
+                    <Text style={{ fontSize: 17, color: COLORS.dark }}>Already a User</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('login')}>
+                        <Text style={STYLES.registerText}> Login</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
 
@@ -170,7 +208,12 @@ const Register = () => {
                     visible={isUserModalVisible}
                     onRequestClose={toggleUserModal}>
                     <View style={{ backgroundColor: '#F5EEF8', height: '100%', width: '100%', flex: 1, alignSelf: 'center' }}>
-                        <Text style={{ fontSize: 22, color: COLORS.dark, marginTop: 82, marginRight: 10, alignSelf: 'center' }}>Register yourself User!</Text>
+
+                        <TouchableOpacity onPress={userModal}>
+                            <Image style={{ marginLeft: 'auto', marginRight: 33, width: '6%', marginTop: 45, height: '12%' }} source={require('../assets/close.png')} />
+                        </TouchableOpacity>
+
+                        <Text style={{ fontSize: 22, color: COLORS.dark, marginTop: -34, marginRight: 10, alignSelf: 'center' }}>Register yourself as User!</Text>
                         <TextInput
                             style={STYLES.uservalue}
                             placeholder="Email"
@@ -208,9 +251,7 @@ const Register = () => {
                                 <Text style={STYLES.buttonText}>Register</Text>
                             </TouchableOpacity>
 
-                            <TouchableHighlight style={STYLES.closeButton} onPress={userModal}>
-                                <Text style={STYLES.buttonText}>Close</Text>
-                            </TouchableHighlight>
+
                         </View>
                     </View>
 
@@ -223,7 +264,10 @@ const Register = () => {
                     onRequestClose={toggleEmployerModal}
                 >
                     <View style={{ backgroundColor: '#F5EEF8', height: '100%', width: '100%', flex: 1, alignSelf: 'center' }}>
-                        <Text style={{ fontSize: 22, color: COLORS.dark, marginTop: 82, marginRight: 10, alignSelf: 'center' }}>Register yourself Employer!</Text>
+                        <TouchableOpacity onPress={closeModal}>
+                            <Image style={{ marginLeft: 'auto', marginRight: 33, width: '6%', marginTop: 45, height: '12%' }} source={require('../assets/close.png')} />
+                        </TouchableOpacity>
+                        <Text style={{ fontSize: 22, color: COLORS.dark, marginTop: -34, marginRight: 10, alignSelf: 'center' }}>Register yourself as Employer!</Text>
                         <TextInput
                             style={STYLES.uservalue}
                             placeholder="Email"
@@ -233,7 +277,9 @@ const Register = () => {
                         <TextInput
                             style={STYLES.uservalue}
                             placeholder="Password"
+                            secureTextEntry
                             value={employeePassword}
+
                             onChangeText={(text) => setEmployeePassword(text)}
                         />
                         <TextInput
@@ -254,21 +300,25 @@ const Register = () => {
                             value={emplocation}
                             onChangeText={(text) => setemplocation(text)}
                         />
+                        <TextInput
+                            style={STYLES.uservalue}
+                            placeholder="Mobile"
+                            value={empmobile}
+                            onChangeText={(text) => setempmob(text)}
+                        />
                         {/* <Button title="Register as Employee" onPress={handleSignempUp} /> */}
                         <View style={{ flexDirection: 'row', marginTop: 100, alignSelf: 'center' }}>
                             <TouchableOpacity style={STYLES.cloudButton} onPress={handleSignempUp}>
                                 <Text style={STYLES.buttonText}>Register</Text>
                             </TouchableOpacity>
 
-                            <TouchableHighlight style={STYLES.closeButton} onPress={closeModal}>
-                                <Text style={STYLES.buttonText}>Close</Text>
-                            </TouchableHighlight>
+
                         </View>
 
                     </View>
                 </Modal>
             </View>
-        </View>
+        </ScrollView>
 
     );
 

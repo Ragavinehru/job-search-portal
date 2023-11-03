@@ -6,26 +6,25 @@ import login from './src/Screens/Login';
 import Search from './Test2';
 import register from './src/Screens/Register';
 import 'react-native-url-polyfill/auto';
-
 import { supabase } from '../../supabase';
-import HomeScreen from './src/Screens/EmployerScreen';
+import EmployerScreen from './src/Screens/EmployerScreen';
 import UserScreen from './src/Screens/UserScreen';
-
-
+import EmployerProfile from './src/Screens/EmployerProfile';
+import ForgetPassword from './src/Screens/ForgetPassword';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
 
-
-
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ header: () => null }}>
         <Stack.Screen name="login" component={login} />
-        <Stack.Screen name="home" component={HomeScreen} />
+        <Stack.Screen name="home" component={EmployerScreen} />
         <Stack.Screen name="register" component={register} />
         <Stack.Screen name="userscreen" component={UserScreen} />
+        <Stack.Screen name="empprofile" component={EmployerProfile} />
+        <Stack.Screen name="forgetpassword" component={ForgetPassword} />
       </Stack.Navigator>
     </NavigationContainer>
   )

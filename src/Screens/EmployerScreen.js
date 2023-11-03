@@ -10,15 +10,10 @@ import {
 import { supabase } from '../../supabase';
 import STYLES from '../styles';
 import COLORS from '../colors/color';
-
 import { Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
-
-
-
-
-const HomeScreen = () => {
+const EmployerScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const userId = route.params?.userId;
@@ -62,7 +57,7 @@ const HomeScreen = () => {
 
 
             const { data, error } = await supabase.from('jobs').insert([jobDetails]);
-            console.log("asahs", data);
+            console.log("data", data);
             if (error) {
                 console.error('Error posting job:', error.message);
                 Alert.alert('Job Posting Failed', 'There was an issue posting the job. Please try again.');
@@ -78,38 +73,34 @@ const HomeScreen = () => {
     return (
         <SafeAreaView style={{ width: '100%', height: '100%' }}>
 
-            <View style={{ marginLeft: 10, marginTop: 12 }}>
+
+            <View style={{ marginLeft: 15, marginTop: 55 }}>
                 <View style={{ flexDirection: 'row' }}>
                     <Text style={{ fontSize: 22 }}>Hello!!</Text>
-                    <Text
-                        style={{
-                            fontSize: 20,
-                            fontWeight: 'bold',
-                            marginLeft: 10,
-                            color: COLORS.dark,
-                        }}>
 
-                    </Text>
                 </View>
-                <Text style={{ marginTop: 5, fontSize: 17, color: COLORS.light }}>
+                <Text style={{ marginTop: 5, fontSize: 20, color: COLORS.light }}>
                     Post a Job,Find perfect candidate!
                 </Text>
-                <Image style={STYLES.person} source={require('../assets/person.png')}></Image>
-            </View>
-
-            <View>
-                <TouchableOpacity style={STYLES.cloudButton} onPress={postjob}>
-                    <Text style={STYLES.buttonText}>Post Job</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('empprofile')}>
+                    <Image style={STYLES.person} source={require('../assets/person.png')}></Image>
                 </TouchableOpacity>
+
             </View>
+            <View style={{ marginTop: -100 }}>
+                <View>
+                    <TouchableOpacity style={STYLES.cloudButton} onPress={postjob}>
+                        <Text style={STYLES.buttonText}>Post Job</Text>
+                    </TouchableOpacity>
+                </View>
 
-            <View style={{ marginTop: 88 }}>
-                <TouchableOpacity style={STYLES.cloudButton} onPress={viewapplied}>
-                    <Text style={STYLES.buttonText}>View candidate</Text>
-                </TouchableOpacity>
+                <View style={{ marginTop: 33 }}>
+                    <TouchableOpacity style={STYLES.cloudButton} onPress={viewapplied}>
+                        <Text style={STYLES.buttonText}>View candidate</Text>
+                    </TouchableOpacity>
+                </View>
+
             </View>
-
-
             <Modal visible={post} transparent={false} animationType="slide" onRequestClose={() => setpost(false)}>
                 <Text style={{ fontSize: 22, color: COLORS.dark, marginTop: 82, marginRight: 10, alignSelf: 'center' }}>Post A Job</Text>
                 <View style={{ marginTop: 23 }}>
@@ -175,7 +166,7 @@ const HomeScreen = () => {
                         onChangeText={setskills}
                     />
                 </View>
-                <View style={{ flexDirection: 'row', marginTop: 77, alignSelf: 'center' }}>
+                <View style={{ flexDirection: 'row', marginTop: 37, alignSelf: 'center' }}>
                     <TouchableOpacity style={STYLES.cloudButton}>
                         <Text style={STYLES.buttonText} onPress={postj}>Post</Text>
                     </TouchableOpacity>
@@ -185,9 +176,13 @@ const HomeScreen = () => {
                     </TouchableOpacity>
                 </View>
             </Modal>
+            <TouchableOpacity onPress={navigation.goBack}>
 
+                <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 12, marginTop: 250 }}> Back </Text>
+
+            </TouchableOpacity>
         </SafeAreaView>
     )
 }
 
-export default HomeScreen;
+export default EmployerScreen;
