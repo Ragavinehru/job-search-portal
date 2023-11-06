@@ -34,6 +34,14 @@ const STYLES = StyleSheet.create({
         marginLeft: '77%',
         marginTop: '-12%'
     },
+    personuser: {
+        width: '15%',
+        height: '19%',
+        marginTop:-10,
+        // position:'absolute',
+        marginLeft: 'auto',
+        marginRight:17
+    },
     reg: {
         height: '10%',
         width: '70%',
@@ -71,6 +79,16 @@ const STYLES = StyleSheet.create({
     uservalue: {
         borderWidth: 1,
         borderColor: COLORS.light,
+        width: '80%',
+        // height: '20%',
+        borderRadius: 15,
+        fontSize: 16,
+        marginTop: 15,
+        alignSelf: 'center'
+    },
+    useredit:{
+        borderWidth: 1,
+        borderColor: COLORS.dark,
         width: '80%',
         // height: '20%',
         borderRadius: 15,
@@ -134,6 +152,22 @@ const STYLES = StyleSheet.create({
         width: '85%',
         alignSelf: 'center'
     },
+    profiledetails:{
+        flexDirection: 'row', fontSize: 33, marginTop: 12,
+        fontWeight:'800',
+        fontSize:19,
+        color:COLORS.dark,
+        
+    },
+    modaledit: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 50,
+        backgroundColor:COLORS.light,
+        margin: 20,
+        alignItems: 'center',
+       
+      },
 })
 
 export default STYLES;

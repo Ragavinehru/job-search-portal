@@ -66,11 +66,11 @@ const Login = () => {
                 if (userData) {
 
                     Alert.alert('Sign In Successful', 'You are now signed in as a regular user.');
-                    navigation.navigate("userscreen");
+                    navigation.navigate("userscreen", { employerData: employerData });
                 } else if (employerData) {
 
                     Alert.alert('Sign In Successful', 'You are now signed in as an employer.');
-                    navigation.navigate('home', { userId: userId });
+                    navigation.navigate('home', { employerData: employerData });
                 }
 
                 // else {
@@ -92,10 +92,7 @@ const Login = () => {
             <StatusBar
                 animated={true}
                 backgroundColor={COLORS.light}
-            // barStyle={statusBarStyle}
-            // showHideTransition={statusBarTransition}
-            // hidden={hidden}
-            />
+             />
             <View style={STYLES.container}>
                 <Image style={STYLES.front} source={require('../assets/front.png')}></Image>
             </View>

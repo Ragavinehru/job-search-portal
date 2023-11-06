@@ -16,8 +16,10 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 const EmployerScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
-    const userId = route.params?.userId;
+    const employerData = route.params?.employerData;
 
+    // const userId = employerData.userId;
+console.log("jjjjjjjjj",employerData);
 
     const [post, setpost] = useState(false);
     const [jobtitle, setjobtitle] = useState('');
@@ -82,7 +84,7 @@ const EmployerScreen = () => {
                 <Text style={{ marginTop: 5, fontSize: 20, color: COLORS.light }}>
                     Post a Job,Find perfect candidate!
                 </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('empprofile')}>
+                <TouchableOpacity onPress={() => navigation.navigate('empprofile',{ employerData: employerData })}>
                     <Image style={STYLES.person} source={require('../assets/person.png')}></Image>
                 </TouchableOpacity>
 

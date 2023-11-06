@@ -8,7 +8,10 @@ import STYLES from '../styles';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 const UserScreen = () => {
+    
     const navigation = useNavigation();
+    const route = useRoute();
+    const employerData = route.params?.employerData;
     const [jobs, setJobs] = useState([]);
     useEffect(() => {
         async function fetchJobs() {
@@ -27,14 +30,18 @@ const UserScreen = () => {
         fetchJobs();
     }, []);
     const renderItem = ({ item }) => (
+        <TouchableOpacity
+        onPress={() => navigation.navigate('jobdetails', { jobData: item })}
+      >
         <View style={STYLES.card}>
-            <Text style={STYLES.jobTitle}>{item.title}</Text>
-            <Text style={STYLES.jobDescription}>{item.description}</Text>
-            <Text style={STYLES.jobDescription}>{item.location}</Text>
-            <TouchableOpacity>
-                <Image style={{ height: 20, marginLeft: 'auto', width: 20 }} source={require('../assets/heart.png')}></Image>
-            </TouchableOpacity>
+          <Text style={STYLES.jobTitle}>{item.title}</Text>
+          <Text style={STYLES.jobDescription}>{item.description}</Text>
+          <Text style={STYLES.jobDescription}>{item.location}</Text>
+          <TouchableOpacity>
+            <Image style={{ height: 20, marginLeft: 'auto', width: 20 }} source={require('../assets/heart.png')} />
+          </TouchableOpacity>
         </View>
+      </TouchableOpacity>
     );
 
     return (
@@ -44,7 +51,10 @@ const UserScreen = () => {
                 <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 12, marginTop: 10 }}> Back </Text>
 
             </TouchableOpacity>
-            <View style={{ marginLeft: 15, marginTop: 55 }}>
+            <TouchableOpacity onPress={() => navigation.navigate('userprofile',{ employerData: employerData })}>
+                    <Image style={STYLES.personuser} source={require('../assets/person.png')}></Image>
+            </TouchableOpacity>
+            <View style={{ marginLeft: 15, marginTop:-250 }}>
                 <View style={{ flexDirection: 'row' }}>
                     <Text style={{ fontSize: 22 }}>Hello!!</Text>
 
