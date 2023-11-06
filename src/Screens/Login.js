@@ -92,7 +92,7 @@ const Login = () => {
             <StatusBar
                 animated={true}
                 backgroundColor={COLORS.light}
-             />
+            />
             <View style={STYLES.container}>
                 <Image style={STYLES.front} source={require('../assets/front.png')}></Image>
             </View>

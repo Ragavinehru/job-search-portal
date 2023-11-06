@@ -13,7 +13,7 @@ import EmployerProfile from './src/Screens/EmployerProfile';
 import ForgetPassword from './src/Screens/ForgetPassword';
 import Userprofile from './src/Screens/Userprofile';
 import Jobdetails from './src/Screens/Jobdetails';
-
+import Postedjobs from './src/Screens/Postedjobs';
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -29,6 +29,7 @@ const App = () => {
         <Stack.Screen name="userprofile" component={Userprofile} />
         <Stack.Screen name="forgetpassword" component={ForgetPassword} />
         <Stack.Screen name="jobdetails" component={Jobdetails} />
+        <Stack.Screen name="postedjob" component={Postedjobs} />
       </Stack.Navigator>
     </NavigationContainer>
   )
