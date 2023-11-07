@@ -102,6 +102,28 @@ const STYLES = StyleSheet.create({
         marginTop: 15,
         alignSelf: 'center'
     },
+    search: {
+        borderWidth: 1,
+        borderColor: COLORS.dark,
+        width: '80%',
+        // height: '20%',
+        // marginLeft: 10,
+        borderRadius: 15,
+        fontSize: 16,
+        marginTop: 15,
+        alignSelf: 'center'
+    },
+    userprofileedit: {
+        borderWidth: 1,
+        borderColor: COLORS.dark,
+        width: '80%',
+        // height: '20%',
+        borderRadius: 15,
+        fontSize: 16,
+        marginTop: 2,
+        marginLeft: 22,
+        alignSelf: 'center'
+    },
     text2value: {
         borderWidth: 1,
         borderColor: COLORS.light,
