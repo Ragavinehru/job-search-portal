@@ -11,7 +11,9 @@ const UserScreen = () => {
 
     const navigation = useNavigation();
     const route = useRoute();
-    const employerData = route.params?.employerData;
+    const userData = route.params?.userData;
+    const loggeduserid =userData.userId;
+    console.log("logged",loggeduserid)
     const [jobs, setJobs] = useState([]);
     useEffect(() => {
         async function fetchJobs() {
@@ -29,10 +31,12 @@ const UserScreen = () => {
 
         fetchJobs();
     }, []);
+    console.log("jobData",jobs)
     const renderItem = ({ item }) => (
         <TouchableOpacity
-            onPress={() => navigation.navigate('jobdetails', { jobData: item })}
+            onPress={() => navigation.navigate('jobdetails',{ jobData: item,profileid:loggeduserid })}
         >
+           
             <View style={STYLES.card}>
                 <Text style={STYLES.jobTitle}>{item.title}</Text>
                 <Text style={STYLES.jobDescription}>{item.description}</Text>
@@ -51,7 +55,7 @@ const UserScreen = () => {
                 <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 12, marginTop: 10 }}> Back </Text>
 
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('userprofile', { employerData: employerData })}>
+            <TouchableOpacity onPress={() => navigation.navigate('userprofile', { userData:userData })}>
                 <Image style={STYLES.personuser} source={require('../assets/person.png')}></Image>
             </TouchableOpacity>
             <View style={{ marginLeft: 15, marginTop: -250 }}>
