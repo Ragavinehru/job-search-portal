@@ -66,7 +66,12 @@ const Login = () => {
                 if (userData) {
 
                     Alert.alert('Sign In Successful', 'You are now signed in as a regular user.');
-                    navigation.navigate("userscreen", { userData: userData });
+                    // navigation.navigate("userscreen", { userData: userData });
+                    navigation.navigate("userscreen", { 
+                        userData: userData,
+                        setEmail: setEmail, 
+                        setPassword: setPassword, 
+                    });
                 } else if (employerData) {
 
                     Alert.alert('Sign In Successful', 'You are now signed in as an employer.');

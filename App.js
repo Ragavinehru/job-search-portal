@@ -14,6 +14,7 @@ import ForgetPassword from './src/Screens/ForgetPassword';
 import Userprofile from './src/Screens/Userprofile';
 import Jobdetails from './src/Screens/Jobdetails';
 import Postedjobs from './src/Screens/Postedjobs';
+import UserDashboard from './src/Screens/UserDashboard';
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
         <Stack.Screen name="forgetpassword" component={ForgetPassword} />
         <Stack.Screen name="jobdetails" component={Jobdetails} />
         <Stack.Screen name="postedjob" component={Postedjobs} />
+        <Stack.Screen name="UserDashboard" component={UserDashboard} />
       </Stack.Navigator>
     </NavigationContainer>
   )

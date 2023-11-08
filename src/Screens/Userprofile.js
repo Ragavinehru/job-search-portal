@@ -5,11 +5,15 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { supabase } from '../../supabase';
 import STYLES from '../styles';
 import COLORS from '../colors/color';
+import UserDashboard from './UserDashboard';
 
 // create a component
 const Userprofile = ({ route }) => {
   const navigation = useNavigation();
   const userData = route.params?.userData;
+  const setEmail = route.params?.setEmail;
+  const setPassword = route.params?.setPassword;
+  
   const [isModalVisible, setModalVisible] = useState(false);
   const [userdetails, setuserdetails] = useState(userData);
   const [username, setusername] = useState('');
@@ -60,7 +64,17 @@ const Userprofile = ({ route }) => {
     setuserEmail(userData.email);
   }, [userData]);
 
-
+  const handleLogout = async () => {
+    try {
+        await supabase.auth.signOut();
+        navigation.navigate('login');
+        setEmail('');
+        setPassword('');
+        
+    } catch (error) {
+        console.error('Error during logout:', error.message);
+    }
+};
   return (
     <View style={{ marginTop: 100, marginLeft: 33 }}>
       <TouchableOpacity onPress={navigation.goBack}>
@@ -85,7 +99,18 @@ const Userprofile = ({ route }) => {
       <View style={{ flexDirection: 'row', fontSize: 27, marginTop: 12 }}>
         <Text style={STYLES.profiledetails} >Location: {userdetails.location}</Text>
       </View>
-
+      <TouchableOpacity style={{ marginTop: 15,marginLeft:-6 }} >
+        <Text style={STYLES.registerText}>My Favourites</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={{ marginTop: 15,marginLeft:-6 }} >
+        <Text onPress={() => navigation.navigate('UserDashboard')} style={STYLES.registerText}>My Dashboard</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={{flexDirection:'row',marginLeft:-76,marginTop:10}}>
+      <Image style={{ width:30,height:30, marginLeft: 77, marginTop: 10 }} source={require('../assets/logout.png')} />
+      <Text style={{color:'red',marginTop:15}}
+           onPress={handleLogout}
+        >Logout</Text>
+</TouchableOpacity>
       <Modal visible={isModalVisible}
         transparent={true}>
 
@@ -122,6 +147,7 @@ const Userprofile = ({ route }) => {
             value={location}
             onChangeText={(text) => setlocaName(text)}
           />
+           
           <View style={{ flexDirection: 'row', marginTop: 16 }}>
             <Text style={{ color: 'black', fontSize: 20 }} onPress={handleuserupdate} >Update profile</Text>
 

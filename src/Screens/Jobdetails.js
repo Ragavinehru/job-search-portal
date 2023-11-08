@@ -18,45 +18,71 @@ const Jobdetails = () => {
   // const getCurrentUser = () => {
   //   return supabase.auth.user();
   // };
+  const [alreadyApplied, setAlreadyApplied] = useState(false);
+  
+  useEffect(() => {
+    const checkIfAlreadyApplied = async () => {
+      try {
+        const { data: jobRecord, error: fetchError } = await supabase
+          .from('jobs')
+          .select('applied_users')
+          .eq('id', JobId);
 
-  const applyForJob = async (userId,JobId) => {
-    try {
-      console.log("id for joddata ",JobId);
-      // Fetch the existing data from the job record
-      const { data: jobRecord, error: fetchError } = await supabase
-        .from('jobs')
-        .select('applied_users')
-        .eq('id', JobId);
-  
-      if (fetchError) {
-        console.error('Error fetching job data:', fetchError);
-        return;
+        if (fetchError) {
+          console.error('Error fetching job data:', fetchError);
+          return;
+        }
+
+        const existingAppliedUsers = jobRecord[0].applied_users || [];
+
+        if (existingAppliedUsers.includes(profileid)) {
+          setAlreadyApplied(true);
+        }
+      } catch (error) {
+        console.error('Error:', error.message);
       }
-  
-      // Extract the existing applied_users array
-      const existingAppliedUsers = jobRecord[0].applied_users || [];
-  
-      // Append the userId to the array
-      existingAppliedUsers.push(userId);
-  
-      // Update the job record with the modified applied_users array
-      const { data: updatedData, error: updateError } = await supabase
-        .from('jobs')
-        .update({ applied_users: existingAppliedUsers })
-        .eq('id', JobId);
-  
-      if (updateError) {
-        console.error('Error applying for the job:', updateError);
-      } else {
-        console.log('Applied for the job successfully.', updatedData);
-        Alert.alert('Applied Job Successful');
+    };
+
+    checkIfAlreadyApplied();
+  }, [profileid, JobId]);
+
+  const applyForJob = async () => {
+    if (alreadyApplied) {
+     
+      Alert.alert('Already Applied', 'You have already applied for this job.');
+    } else {
+      try {
+        const { data: jobRecord, error: fetchError } = await supabase
+          .from('jobs')
+          .select('applied_users')
+          .eq('id', JobId);
+
+        if (fetchError) {
+          console.error('Error fetching job data:', fetchError);
+          return;
+        }
+
+        const existingAppliedUsers = jobRecord[0].applied_users || [];
+        existingAppliedUsers.push(profileid);
+
+        const { data: updatedData, error: updateError } = await supabase
+          .from('jobs')
+          .update({ applied_users: existingAppliedUsers })
+          .eq('id', JobId);
+
+        if (updateError) {
+          console.error('Error applying for the job:', updateError);
+        } else {
+          console.log('Applied for the job successfully.', updatedData);
+          setAlreadyApplied(true);
+          
+        }
+      } catch (error) {
+        console.error('Error:', error.message);
       }
-    } catch (error) {
-      console.error('Error:', error.message);
     }
   };
   
-  // Call applyForJob(userId) with the user's ID to add them to the applied_users array.
   
   
   return (
@@ -84,9 +110,14 @@ const Jobdetails = () => {
           <Text style={{ fontSize: 16, color: COLORS.dark, marginTop: 10 }}>Education: {jobData.education}</Text>
           <Text style={{ fontSize: 16, color: COLORS.dark, marginTop: 10 }}>Skills: {jobData.skills}</Text>
           {/* <Text style={{ fontSize: 16 }}>{jobData.contact}</Text> */}
-          <TouchableOpacity style={STYLES.cloudButton} onPress={() => applyForJob(userId, JobId)}>
-            <Text style={STYLES.buttonText}>Apply now</Text>
+          <TouchableOpacity style={STYLES.cloudButton} onPress={applyForJob}>
+            <Text style={STYLES.buttonText}>{alreadyApplied ? 'Applied' : 'Apply now'}</Text>
           </TouchableOpacity>
+          {alreadyApplied && (
+            <Text style={{ fontSize: 16, color: 'green', marginTop: 10 }}>
+              You have applied for this job!.
+            </Text>
+          )}
         </View>
 
 

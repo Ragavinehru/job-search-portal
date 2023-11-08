@@ -196,6 +196,14 @@ const STYLES = StyleSheet.create({
         alignItems: 'center',
 
     },
+    
+    jobDpackage:{
+marginLeft:10,
+color:COLORS.dark
+    },
+    jobDescription:{
+        color:COLORS.dark
+    },
 })
 
 export default STYLES;

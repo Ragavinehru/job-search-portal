@@ -74,7 +74,11 @@ console.log("jjjjjjjjj",employerData);
     };
     return (
         <SafeAreaView style={{ width: '100%', height: '100%' }}>
+ <TouchableOpacity onPress={navigation.goBack}>
 
+<Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 12,  }}> Back</Text>
+
+</TouchableOpacity>
 
             <View style={{ marginLeft: 15, marginTop: 55 }}>
                 <View style={{ flexDirection: 'row' }}>
@@ -101,8 +105,9 @@ console.log("jjjjjjjjj",employerData);
                         <Text style={STYLES.buttonText}>View candidate</Text>
                     </TouchableOpacity>
                 </View>
-
+                
             </View>
+            
             <Modal visible={post} transparent={false} animationType="slide" onRequestClose={() => setpost(false)}>
                 <Text style={{ fontSize: 22, color: COLORS.dark, marginTop: 82, marginRight: 10, alignSelf: 'center' }}>Post A Job</Text>
                 <View style={{ marginTop: 23 }}>
@@ -178,11 +183,8 @@ console.log("jjjjjjjjj",employerData);
                     </TouchableOpacity>
                 </View>
             </Modal>
-            <TouchableOpacity onPress={navigation.goBack}>
-
-                <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 12, marginTop: 250 }}> Back </Text>
-
-            </TouchableOpacity>
+            <Image style={{ width: '95%', height: '47%', marginLeft: 22 }} source={require('../assets/emppage.png')} />
+           
         </SafeAreaView>
     )
 }
