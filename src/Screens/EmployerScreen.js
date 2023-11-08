@@ -19,7 +19,7 @@ const EmployerScreen = () => {
     const employerData = route.params?.employerData;
 
     // const userId = employerData.userId;
-console.log("jjjjjjjjj",employerData);
+    console.log("jjjjjjjjj", employerData);
 
     const [post, setpost] = useState(false);
     const [jobtitle, setjobtitle] = useState('');
@@ -74,11 +74,11 @@ console.log("jjjjjjjjj",employerData);
     };
     return (
         <SafeAreaView style={{ width: '100%', height: '100%' }}>
- <TouchableOpacity onPress={navigation.goBack}>
+            <TouchableOpacity onPress={navigation.goBack}>
 
-<Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 12,  }}> Back</Text>
+                <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 12, }}> Back</Text>
 
-</TouchableOpacity>
+            </TouchableOpacity>
 
             <View style={{ marginLeft: 15, marginTop: 55 }}>
                 <View style={{ flexDirection: 'row' }}>
@@ -88,7 +88,7 @@ console.log("jjjjjjjjj",employerData);
                 <Text style={{ marginTop: 5, fontSize: 20, color: COLORS.light }}>
                     Post a Job,Find perfect candidate!
                 </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('empprofile',{ employerData: employerData })}>
+                <TouchableOpacity onPress={() => navigation.navigate('empprofile', { employerData: employerData })}>
                     <Image style={STYLES.person} source={require('../assets/person.png')}></Image>
                 </TouchableOpacity>
 
@@ -105,9 +105,9 @@ console.log("jjjjjjjjj",employerData);
                         <Text style={STYLES.buttonText}>View candidate</Text>
                     </TouchableOpacity>
                 </View>
-                
+
             </View>
-            
+
             <Modal visible={post} transparent={false} animationType="slide" onRequestClose={() => setpost(false)}>
                 <Text style={{ fontSize: 22, color: COLORS.dark, marginTop: 82, marginRight: 10, alignSelf: 'center' }}>Post A Job</Text>
                 <View style={{ marginTop: 23 }}>
@@ -183,8 +183,8 @@ console.log("jjjjjjjjj",employerData);
                     </TouchableOpacity>
                 </View>
             </Modal>
-            <Image style={{ width: '95%', height: '47%', marginLeft: 22 }} source={require('../assets/emppage.png')} />
-           
+            <Image style={{ width: '100%', height: '47%', marginLeft: -7, marginTop: -29 }} source={require('../assets/emppage.png')} />
+
         </SafeAreaView>
     )
 }

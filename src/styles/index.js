@@ -35,12 +35,12 @@ const STYLES = StyleSheet.create({
         marginTop: '-12%'
     },
     personuser: {
-        width: '15%',
-        height: '19%',
-        marginTop: -10,
-        // position:'absolute',
-        marginLeft: 'auto',
-        marginRight: 17
+        width: '19%',
+        height: 55,
+        marginTop: -59,
+
+        marginLeft: 310,
+        // marginRight: 17
     },
     reg: {
         height: '10%',
@@ -196,13 +196,13 @@ const STYLES = StyleSheet.create({
         alignItems: 'center',
 
     },
-    
-    jobDpackage:{
-marginLeft:10,
-color:COLORS.dark
+
+    jobDpackage: {
+        marginLeft: 10,
+        color: COLORS.dark
     },
-    jobDescription:{
-        color:COLORS.dark
+    jobDescription: {
+        color: COLORS.dark
     },
 })
 

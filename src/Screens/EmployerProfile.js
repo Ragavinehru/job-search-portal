@@ -23,6 +23,16 @@ const EmployerProfile = () => {
   const [empdetails, setEmployerData] = useState(employerData);
   console.log("123455", empdetails)
 
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      navigation.navigate('login');
+
+    } catch (error) {
+      console.error('Error during logout:', error.message);
+    }
+  };
+
   const handleUpdateProfile = async () => {
 
 
@@ -90,6 +100,14 @@ const EmployerProfile = () => {
 
       <TouchableOpacity style={{ marginTop: 10, }} onPress={() => navigation.navigate('postedjob', { employerData: employerData })}>
         <Text style={STYLES.registerText}>Posted Jobs</Text>
+      </TouchableOpacity>
+
+
+      <TouchableOpacity style={{ flexDirection: 'row', marginLeft: -76, marginTop: 98 }}>
+        <Image style={{ width: 30, height: 30, marginLeft: 77, marginTop: 10 }} source={require('../assets/logout.png')} />
+        <Text style={{ color: 'red', marginTop: 15 }}
+          onPress={handleLogout}
+        >Logout</Text>
       </TouchableOpacity>
 
       <Modal visible={isModalVisible}

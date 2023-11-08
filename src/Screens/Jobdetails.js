@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity,Alert, Image, Modal, TextInput, Button, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, Image, Modal, TextInput, Button, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
 
@@ -12,14 +12,14 @@ const Jobdetails = () => {
   const route = useRoute();
   const jobData = route.params?.jobData;
   const profileid = route.params?.profileid;
-  console.log("id",profileid)
+  console.log("id", profileid)
   const JobId = jobData.id;
-  console.log("id for joddata",JobId);
+  console.log("id for joddata", JobId);
   // const getCurrentUser = () => {
   //   return supabase.auth.user();
   // };
   const [alreadyApplied, setAlreadyApplied] = useState(false);
-  
+
   useEffect(() => {
     const checkIfAlreadyApplied = async () => {
       try {
@@ -48,7 +48,7 @@ const Jobdetails = () => {
 
   const applyForJob = async () => {
     if (alreadyApplied) {
-     
+
       Alert.alert('Already Applied', 'You have already applied for this job.');
     } else {
       try {
@@ -75,16 +75,16 @@ const Jobdetails = () => {
         } else {
           console.log('Applied for the job successfully.', updatedData);
           setAlreadyApplied(true);
-          
+
         }
       } catch (error) {
         console.error('Error:', error.message);
       }
     }
   };
-  
-  
-  
+
+
+
   return (
     <ScrollView style={{ width: '100%' }}>
       <View >
@@ -101,7 +101,7 @@ const Jobdetails = () => {
         </View>
 
 
-        <View style={{ marginVertical: '100%', marginTop: -90, paddingLeft: 26, }}>
+        <View style={{ marginVertical: '100%', marginTop: -170, paddingLeft: 26, }}>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: COLORS.dark }}>Job Description</Text>
           <Text style={{ fontSize: 16, marginVertical: 10 }}>{jobData.description}</Text>
           <Text style={{ fontSize: 19, fontWeight: '400' }}>Experience: {jobData.experience}</Text>
@@ -114,7 +114,7 @@ const Jobdetails = () => {
             <Text style={STYLES.buttonText}>{alreadyApplied ? 'Applied' : 'Apply now'}</Text>
           </TouchableOpacity>
           {alreadyApplied && (
-            <Text style={{ fontSize: 16, color: 'green', marginTop: 10 }}>
+            <Text style={{ fontSize: 16, color: 'green', marginTop: 10, alignSelf: 'center' }}>
               You have applied for this job!.
             </Text>
           )}
