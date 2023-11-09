@@ -1,37 +1,37 @@
-import { View, Text, TouchableOpacity, ScrollView, Image, Modal, TextInput, Button } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Modal, TextInput, Button, ScrollView, FlatList } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { supabase } from '../../supabase';
 import STYLES from '../styles';
 
-const UserDashboard = () => {
-
+// create a component
+const EmpDashboard = () => {
     const navigation = useNavigation();
     const route = useRoute();
-    const userData = route.params?.userData;
-    const userId = userData.userId;
-    const [appliedJobsCount, setAppliedJobsCount] = useState(0);
+    const employerData = route.params?.employerData;
+    const employerId = employerData.userId;
+    const [postedJobsCount, setPostedJobsCount] = useState(0);
+
     useEffect(() => {
-        const fetchAppliedJobsCount = async () => {
+        const fetchPostedJobsCount = async () => {
             try {
                 const { data, error } = await supabase
                     .from('jobs')
                     .select('id')
-                    .contains('applied_users', [userId]);
+                    .eq('employer_id', employerId);
 
                 if (error) {
-                    console.error('Error fetching applied jobs count:', error);
+                    console.error('Error fetching posted jobs count:', error);
                 } else {
-                    setAppliedJobsCount(data.length);
+                    setPostedJobsCount(data.length);
                 }
             } catch (error) {
                 console.error('Error:', error.message);
             }
         };
 
-        fetchAppliedJobsCount();
-    }, [userId]);
-
+        fetchPostedJobsCount();
+    }, [employerId]);
     return (
         <ScrollView >
             <View style={{ width: '100%' }}>
@@ -39,7 +39,7 @@ const UserDashboard = () => {
                     <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 3, marginTop: 23 }}> Back </Text>
                     {/* <Image style={{ width: '50%', height: '60%', marginLeft: 77, marginTop: 10 }} source={require('../assets/user.png')} /> */}
                 </TouchableOpacity>
-                <Text style={STYLES.profiledetails}>   UserDashboard</Text>
+                <Text style={STYLES.profiledetails}>   Employer Dashboard</Text>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={STYLES.carddashboard}>
                         <Text style={{
@@ -47,8 +47,8 @@ const UserDashboard = () => {
                             fontSize: 18,
                             color: 'white',
                             fontWeight: '800'
-                        }}>Applied Jobs  </Text>
-                        <Text style={{ fontSize: 66, alignSelf: 'center' }}> {appliedJobsCount}</Text>
+                        }}>Posted Jobs  </Text>
+                        <Text style={{ fontSize: 66, alignSelf: 'center' }}>{postedJobsCount}</Text>
                     </View>
                     <View style={STYLES.carddashboard}>
                         <Text style={{
@@ -75,7 +75,4 @@ const UserDashboard = () => {
 };
 
 
-
-
-
-export default UserDashboard;
+export default EmpDashboard;

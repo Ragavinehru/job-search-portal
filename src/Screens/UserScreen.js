@@ -15,6 +15,9 @@ const UserScreen = () => {
     const userData = route.params?.userData;
     const loggeduserid = userData.userId;
 
+    const userId = global.userId;
+    console.log('Global User ID:', userId);
+
 
     console.log("logged", loggeduserid)
     const [jobs, setJobs] = useState([]);
@@ -117,11 +120,11 @@ const UserScreen = () => {
                     <Text style={STYLES.jobDpackage}>Package: {item.package} </Text>
                 </View>
                 <TouchableOpacity onPress={() => toggleFavorite(item.id)}>
-                            <Image
-                                style={{ height: 20, marginLeft: 'auto', width: 20, tintColor: favorites.includes(item.id) ? 'red' : 'black' }}
-                                source={require('../assets/heart.png')}
-                            />
-                        </TouchableOpacity>
+                    <Image
+                        style={{ height: 20, marginLeft: 'auto', width: 20, tintColor: favorites.includes(item.id) ? 'red' : 'black' }}
+                        source={require('../assets/heart.png')}
+                    />
+                </TouchableOpacity>
             </View>
         </TouchableOpacity>
 
@@ -164,7 +167,7 @@ const UserScreen = () => {
         const updatedFavorites = favorites.includes(jobId)
             ? favorites.filter(id => id !== jobId)
             : [...favorites, jobId];
-        
+
         try {
             setFavorites(updatedFavorites);
             await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
@@ -178,7 +181,7 @@ const UserScreen = () => {
             console.error('Error updating favorites:', error);
         }
     };
-console.log("kkkkkkkkk",favorites);
+    console.log("kkkkkkkkk", favorites);
 
     return (
         //     <KeyboardAvoidingView
@@ -204,7 +207,7 @@ console.log("kkkkkkkkk",favorites);
                 </Text>
                 <TouchableOpacity onPress={() => navigation.navigate('userprofile', {
                     userData: userData,
-                    favorites:favorites,
+                    favorites: favorites,
 
                 })}>
                     <Image style={STYLES.personuser} source={require('../assets/person.png')}></Image>
@@ -225,17 +228,17 @@ console.log("kkkkkkkkk",favorites);
                 </TouchableOpacity>
             </View>
             <Modal
-                
+
                 animationType="slide"
                 transparent={true}
                 visible={isFilterModalVisible}
                 onRequestClose={closeFilterModal}
             >
-                <View style={{ flex: 1, justifyContent: 'center',alignItems: 'center', }}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
 
                     <View style={{ backgroundColor: 'white', padding: 50, borderRadius: 10 }}>
-                        <Text style={{ fontWeight: '700',fontSize:20,alignSelf:'center', color: COLORS.dark }}>Sort by</Text>
-                        <TouchableOpacity style={{marginTop:10}}
+                        <Text style={{ fontWeight: '700', fontSize: 20, alignSelf: 'center', color: COLORS.dark }}>Sort by</Text>
+                        <TouchableOpacity style={{ marginTop: 10 }}
                             onPress={() => {
                                 closeFilterModal();
                                 sortJobsByPackage();
@@ -245,7 +248,7 @@ console.log("kkkkkkkkk",favorites);
                             <Text style={STYLES.registerText}>Package (Low to High)</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{marginTop:10}}
+                        <TouchableOpacity style={{ marginTop: 10 }}
                             onPress={() => {
                                 closeFilterModal();
                                 sortJobsByExperience();
@@ -256,7 +259,7 @@ console.log("kkkkkkkkk",favorites);
 
                         </TouchableOpacity>
                         <TouchableOpacity onPress={closeFilterModal}>
-                            <Text style={{ color: 'red', alignSelf: 'center',marginTop:10 }}>Close</Text>
+                            <Text style={{ color: 'red', alignSelf: 'center', marginTop: 10 }}>Close</Text>
                         </TouchableOpacity>
                     </View>
 

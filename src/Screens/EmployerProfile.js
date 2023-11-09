@@ -21,6 +21,9 @@ const EmployerProfile = () => {
   const employerData = route.params?.employerData;
   const employerid = employerData.userId;
   const [empdetails, setEmployerData] = useState(employerData);
+
+  const userId = global.userId;
+  console.log('Global User ID:', userId);
   console.log("123455", empdetails)
 
   const handleLogout = async () => {
@@ -53,7 +56,7 @@ const EmployerProfile = () => {
       } else {
         console.log('Profile updated successfully');
         setEmployerData({
-          ...employerData,
+          // ...employerData,
           name: employeename,
           mobile: mobile,
           company_name: companyName,
@@ -83,7 +86,7 @@ const EmployerProfile = () => {
       <TouchableOpacity>
         <Text onPress={() => setModalVisible(true)} style={{ fontSize: 20, fontWeight: 'bold', marginTop: -60, marginRight: 30, marginLeft: 'auto' }}>Edit Profile</Text>
       </TouchableOpacity>
-      <Image style={{ width: '50%', height: '35%', marginLeft: 77, marginTop: 10 }} source={require('../assets/user.png')} />
+      <Image style={{ width: '43%', height: '29%', alignSelf: 'center', marginLeft: -30, marginTop: 10 }} source={require('../assets/user.png')} />
       <View style={{ flexDirection: 'row', fontSize: 27, marginTop: 7 }}>
         <Text style={STYLES.profiledetails}>Name: {empdetails.name}</Text>
       </View>
@@ -98,12 +101,14 @@ const EmployerProfile = () => {
         <Text style={STYLES.profiledetails} >CompanyName: {empdetails.company_name}</Text>
       </View>
 
-      <TouchableOpacity style={{ marginTop: 10, }} onPress={() => navigation.navigate('postedjob', { employerData: employerData })}>
+      <TouchableOpacity style={{ marginTop: 16, }} onPress={() => navigation.navigate('postedjob', { employerData: employerData })}>
         <Text style={STYLES.registerText}>Posted Jobs</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={{ marginTop: 16, }} onPress={() => navigation.navigate('Empdashboard', { employerData: employerData })}>
+        <Text style={STYLES.registerText}>My Dashboard</Text>
+      </TouchableOpacity>
 
-
-      <TouchableOpacity style={{ flexDirection: 'row', marginLeft: -76, marginTop: 98 }}>
+      <TouchableOpacity style={{ flexDirection: 'row', marginLeft: -76, marginTop: 160 }}>
         <Image style={{ width: 30, height: 30, marginLeft: 77, marginTop: 10 }} source={require('../assets/logout.png')} />
         <Text style={{ color: 'red', marginTop: 15 }}
           onPress={handleLogout}

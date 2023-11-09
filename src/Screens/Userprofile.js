@@ -16,7 +16,7 @@ const Userprofile = ({ route }) => {
   const userData = route.params?.userData;
   const favorites = route.params?.favorites;
 
-console.log("favour",favorites);
+  console.log("favour", favorites);
   const [isModalVisible, setModalVisible] = useState(false);
   const [userdetails, setuserdetails] = useState(userData);
   const [username, setusername] = useState('');
@@ -129,7 +129,7 @@ console.log("favour",favorites);
         <Text onPress={() => setModalVisible(true)} style={{ fontSize: 20, fontWeight: 'bold', marginTop: -70, marginRight: 30, marginLeft: 'auto' }}>Edit Profile</Text>
       </TouchableOpacity>
 
-      <Image style={{ width: '50%', height: '35%', marginLeft: 77, marginTop: 10 }} source={require('../assets/user.png')} />
+      <Image style={{ width: '43%', height: '29%', marginLeft: 77, marginTop: 10 }} source={require('../assets/user.png')} />
       <View style={{ flexDirection: 'row', fontSize: 27, marginTop: 7 }}>
         <Text style={STYLES.profiledetails}>Name: {userdetails.name}</Text>
       </View>
@@ -145,27 +145,30 @@ console.log("favour",favorites);
       </View>
       <TouchableOpacity style={{ marginTop: 15, marginLeft: -6 }} >
         <Text onPress={() => navigation.navigate('Favour', {
-                  
-                    favorites:favorites,
 
-                })} style={STYLES.registerText}>My Favourites</Text>
+          favorites: favorites,
+
+        })} style={STYLES.registerText}>My Favourites</Text>
       </TouchableOpacity>
       <TouchableOpacity style={{ marginTop: 15, marginLeft: -6 }} >
-        <Text onPress={() => navigation.navigate('UserDashboard')} style={STYLES.registerText}>My Dashboard</Text>
+        <Text onPress={() => navigation.navigate('UserDashboard', {
+          userData: userData,
+
+        })} style={STYLES.registerText}>My Dashboard</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={{ flexDirection: 'row', marginLeft: -76, marginTop: 98 }}>
+      <TouchableOpacity style={{ flexDirection: 'row', marginLeft: -76, marginTop: 160 }}>
         <Image style={{ width: 30, height: 30, marginLeft: 77, marginTop: 10 }} source={require('../assets/logout.png')} />
         <Text style={{ color: 'red', marginTop: 15 }}
           onPress={handleLogout}
         >Logout</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 'auto', marginTop: -44, marginRight: 33 }}>
+      {/* <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 'auto', marginTop: -44, marginRight: 33 }}>
         <Image style={{ width: 30, height: 30, marginLeft: 77, marginTop: 10 }} source={require('../assets/upload.png')} />
         <Text style={{ color: COLORS.light, marginTop: 15 }}
-          // onPress={openFilePicker}
+        // onPress={openFilePicker}
         >Upload</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
 
       <Modal visible={isModalVisible}

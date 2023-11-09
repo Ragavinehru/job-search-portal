@@ -66,14 +66,27 @@ const STYLES = StyleSheet.create({
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.2,
     },
+    carddashboard: {
+        backgroundColor: COLORS.light,
+        borderRadius: 10,
+        // padding: 53,
+        margin: 23,
+        width: '40%',
+        height: 130,
+        elevation: 7,
+        borderRadius: 15,
+        shadowColor: COLORS.dark,
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.2,
+    },
     cardposted: {
         backgroundColor: 'white',
         borderRadius: 10,
         padding: 44,
         margin: 8,
         elevation: 7,
-        width:'80%',
-        alignSelf:'center',
+        width: '80%',
+        alignSelf: 'center',
         borderRadius: 15,
         shadowColor: COLORS.dark,
         shadowOffset: { width: 0, height: 6 },
@@ -215,8 +228,14 @@ const STYLES = StyleSheet.create({
         color: COLORS.dark
     },
     jobDescription: {
-        color: COLORS.dark
+        color: COLORS.dark,
+
     },
+    postedjob: {
+        color: COLORS.light,
+        fontSize: 22,
+        marginTop: -19
+    }
 })
 
 export default STYLES;

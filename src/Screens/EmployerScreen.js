@@ -37,7 +37,7 @@ const EmployerScreen = () => {
     const postjob = () => {
         setpost(true);
     };
-   
+
     const postj = async () => {
         try {
 
