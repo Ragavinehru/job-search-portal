@@ -6,6 +6,7 @@ import COLORS from '../colors/color';
 import { supabase } from '../../supabase';
 import STYLES from '../styles';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UserScreen = () => {
 
@@ -112,17 +113,72 @@ const UserScreen = () => {
                 <Text style={STYLES.jobDescription}>{item.description}</Text>
                 <Text style={STYLES.jobDescription}>{item.location}</Text>
                 <View style={{ flexDirection: 'row' }}>
-                    <Text style={STYLES.jobDescription}>Experience: {item.experience}</Text>
-                    <Text style={STYLES.jobDpackage}>Package: {item.package}</Text>
+                    <Text style={STYLES.jobDescription}>Experience: {item.experience} </Text>
+                    <Text style={STYLES.jobDpackage}>Package: {item.package} </Text>
                 </View>
-                <TouchableOpacity>
-                    <Image style={{ height: 20, marginLeft: 'auto', width: 20 }} source={require('../assets/heart.png')} />
-                </TouchableOpacity>
+                <TouchableOpacity onPress={() => toggleFavorite(item.id)}>
+                            <Image
+                                style={{ height: 20, marginLeft: 'auto', width: 20, tintColor: favorites.includes(item.id) ? 'red' : 'black' }}
+                                source={require('../assets/heart.png')}
+                            />
+                        </TouchableOpacity>
             </View>
         </TouchableOpacity>
 
     );
 
+    const [favorites, setFavorites] = useState([]);
+    // Fetch jobs from Supabase
+    useEffect(() => {
+        async function fetchJobs() {
+            const { data, error } = await supabase
+                .from('jobs')
+                .select('*');
+
+            if (!error) {
+                setJobs(data);
+            }
+        }
+
+        fetchJobs();
+    }, []);
+
+    // Load favorites from AsyncStorage when the component first loads
+    useEffect(() => {
+        async function loadFavorites() {
+            try {
+                const storedFavorites = await AsyncStorage.getItem('favorites');
+                if (storedFavorites) {
+                    setFavorites(JSON.parse(storedFavorites));
+                }
+            } catch (error) {
+                console.error('Error loading favorites from AsyncStorage:', error);
+            }
+        }
+
+        loadFavorites();
+    }, []);
+
+    // Update the toggleFavorite function
+    const toggleFavorite = async (jobId) => {
+        const updatedFavorites = favorites.includes(jobId)
+            ? favorites.filter(id => id !== jobId)
+            : [...favorites, jobId];
+        
+        try {
+            setFavorites(updatedFavorites);
+            await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+            await supabase.from('users').upsert([
+                {
+                    userId: loggeduserid,
+                    favorite_jobs: updatedFavorites,
+                },
+            ]);
+        } catch (error) {
+            console.error('Error updating favorites:', error);
+        }
+    };
+console.log("kkkkkkkkk",favorites);
 
     return (
         //     <KeyboardAvoidingView
@@ -148,6 +204,7 @@ const UserScreen = () => {
                 </Text>
                 <TouchableOpacity onPress={() => navigation.navigate('userprofile', {
                     userData: userData,
+                    favorites:favorites,
 
                 })}>
                     <Image style={STYLES.personuser} source={require('../assets/person.png')}></Image>
@@ -168,27 +225,27 @@ const UserScreen = () => {
                 </TouchableOpacity>
             </View>
             <Modal
-                style={{ padding: 10 }}
+                
                 animationType="slide"
                 transparent={true}
                 visible={isFilterModalVisible}
                 onRequestClose={closeFilterModal}
             >
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
+                <View style={{ flex: 1, justifyContent: 'center',alignItems: 'center', }}>
 
-                    <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
-                        <Text style={{ fontWeight: '700', color: COLORS.dark }}>Sort by</Text>
-                        <TouchableOpacity
+                    <View style={{ backgroundColor: 'white', padding: 50, borderRadius: 10 }}>
+                        <Text style={{ fontWeight: '700',fontSize:20,alignSelf:'center', color: COLORS.dark }}>Sort by</Text>
+                        <TouchableOpacity style={{marginTop:10}}
                             onPress={() => {
                                 closeFilterModal();
                                 sortJobsByPackage();
 
                             }}
                         >
-                            <Text style={STYLES.registerText}>Salary (Low to High)</Text>
+                            <Text style={STYLES.registerText}>Package (Low to High)</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity
+                        <TouchableOpacity style={{marginTop:10}}
                             onPress={() => {
                                 closeFilterModal();
                                 sortJobsByExperience();
@@ -199,7 +256,7 @@ const UserScreen = () => {
 
                         </TouchableOpacity>
                         <TouchableOpacity onPress={closeFilterModal}>
-                            <Text style={{ color: 'red', alignSelf: 'center' }}>Close</Text>
+                            <Text style={{ color: 'red', alignSelf: 'center',marginTop:10 }}>Close</Text>
                         </TouchableOpacity>
                     </View>
 

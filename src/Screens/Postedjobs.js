@@ -14,6 +14,7 @@ const Postedjobs = () => {
 
     const [postedJobs, setPostedJobs] = useState([]);
     console.log("hhhhhhh", employerid)
+    
     useEffect(() => {
         const fetchPostedJobs = async () => {
             try {
@@ -36,6 +37,36 @@ const Postedjobs = () => {
         fetchPostedJobs();
     }, [employerid]);
 
+    // const fetchAppliedUsersForJob = async (job) => {
+    //     const { data, error } = await supabase
+    //         .from('jobs')
+    //         .select('applied_users')
+    //         .eq('id', job.id);
+
+    //     if (error) {
+    //         console.error('Error fetching applied users for job:', error);
+    //         return { applied_users: [] };
+    //     } else {
+    //         return data[0] || { applied_users: [] };
+    //         // console.log('Error fetching applied users for job:', data);
+    //     }
+    // };
+
+   
+    // const fetchUserDetails = async (userId) => {
+    //     const { data, error } = await supabase
+    //         .from('users')
+    //         .select('name, email')
+    //         .eq('id', userId);
+
+    //     if (error) {
+    //         console.error('Error fetching user details:', error);
+    //         return { name: '', email: '' };
+    //     } else {
+    //         return data[0];
+    //     }
+    // };
+
     return (
         <ScrollView >
             <View style={{ width: '100%' }}>
@@ -43,15 +74,23 @@ const Postedjobs = () => {
                     <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: -3, }}> Back </Text>
                     {/* <Image style={{ width: '50%', height: '60%', marginLeft: 77, marginTop: 10 }} source={require('../assets/user.png')} /> */}
                 </TouchableOpacity>
-                <Text style={STYLES.profiledetails}>Posted Jobs</Text>
+                <Text style={STYLES.profiledetails}>   Posted Jobs</Text>
                 <FlatList
                     data={postedJobs}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
-                        <View style={STYLES.card}>
-                            <Text>{item.title}</Text>
-                            <Text>{item.description}</Text>
-                            {/* Render other job details here */}
+                        <View style={STYLES.cardposted}>
+                            <Text style={STYLES.jobDescription}>{item.title}</Text>
+                            <Text style={STYLES.jobDescription}>{item.description}</Text>
+                            {/* {fetchUserDetails(item).applied_users.map(async (userId) => {
+                                const userDetails = await fetchUserDetails(userId);
+                                return (
+                                    <View key={userId}>
+                                        <Text style={STYLES.jobDescription}>{userDetails.name}</Text>
+                                        <Text style={STYLES.jobDescription}>{userDetails.email}</Text>
+                                    </View>
+                                );
+                            })} */}
                         </View>
                     )}
                 />

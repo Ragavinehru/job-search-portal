@@ -83,7 +83,7 @@ const EmployerProfile = () => {
       <TouchableOpacity>
         <Text onPress={() => setModalVisible(true)} style={{ fontSize: 20, fontWeight: 'bold', marginTop: -60, marginRight: 30, marginLeft: 'auto' }}>Edit Profile</Text>
       </TouchableOpacity>
-      <Image style={{ width: '50%', height: '40%', marginLeft: 77, marginTop: 10 }} source={require('../assets/user.png')} />
+      <Image style={{ width: '50%', height: '35%', marginLeft: 77, marginTop: 10 }} source={require('../assets/user.png')} />
       <View style={{ flexDirection: 'row', fontSize: 27, marginTop: 7 }}>
         <Text style={STYLES.profiledetails}>Name: {empdetails.name}</Text>
       </View>

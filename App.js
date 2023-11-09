@@ -15,6 +15,10 @@ import Userprofile from './src/Screens/Userprofile';
 import Jobdetails from './src/Screens/Jobdetails';
 import Postedjobs from './src/Screens/Postedjobs';
 import UserDashboard from './src/Screens/UserDashboard';
+import Favourites from './src/Screens/Myfavourites';
+import Viewcandidate from './src/Screens/Viewcandidates';
+
+
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -32,6 +36,8 @@ const App = () => {
         <Stack.Screen name="jobdetails" component={Jobdetails} />
         <Stack.Screen name="postedjob" component={Postedjobs} />
         <Stack.Screen name="UserDashboard" component={UserDashboard} />
+        <Stack.Screen name="Favour" component={Favourites} />
+        <Stack.Screen name="Viewcandidate" component={Viewcandidate} />
       </Stack.Navigator>
     </NavigationContainer>
   )
