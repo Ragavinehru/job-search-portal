@@ -11,6 +11,9 @@ const UserDashboard = () => {
     const userData = route.params?.userData;
     const userId = userData.userId;
     const [appliedJobsCount, setAppliedJobsCount] = useState(0);
+    const [shortlistedCount, setShortlistedCount] = useState(0);
+    const [rejectedCount, setRejectedCount] = useState(0);
+
     useEffect(() => {
         const fetchAppliedJobsCount = async () => {
             try {
@@ -24,6 +27,47 @@ const UserDashboard = () => {
                 } else {
                     setAppliedJobsCount(data.length);
                 }
+
+                // Fetch shortlisted data
+                const { data: shortlistedData, error: shortlistedError } = await supabase
+                    .from('jobs')
+                    .select('applied_users_status')
+                // .eq('applied_users', userId);
+
+                if (shortlistedError) {
+                    console.error('Error fetching shortlisted data:', shortlistedError);
+                } else {
+                    let totalCount = 0;
+
+                    // Iterate through each item in the array
+                    shortlistedData.forEach(item => {
+                        const shortlistedUsers = item.applied_users_status || {};
+                        totalCount += Object.values(shortlistedUsers).filter(status => status === 'shortlisted').length;
+                    });
+
+                    setShortlistedCount(totalCount);
+                }
+
+                // Fetch rejected data
+                const { data: rejectedData, error: rejectedError } = await supabase
+                    .from('jobs')
+                    .select('applied_users_status')
+                // .eq('applied_users', userId);
+
+                if (rejectedError) {
+                    console.error('Error fetching rejected data:', rejectedError);
+                } else {
+                    let totalCount = 0;
+
+                    // Iterate through each item in the array
+                    rejectedData.forEach(item => {
+                        const rejectedUsers = item.applied_users_status || {};
+                        totalCount += Object.values(rejectedUsers).filter(status => status === 'rejected').length;
+                    });
+
+                    setRejectedCount(totalCount);
+                }
+
             } catch (error) {
                 console.error('Error:', error.message);
             }
@@ -31,6 +75,7 @@ const UserDashboard = () => {
 
         fetchAppliedJobsCount();
     }, [userId]);
+
 
     return (
         <ScrollView >
@@ -55,9 +100,9 @@ const UserDashboard = () => {
                             alignSelf: 'center',
                             fontSize: 18,
                             color: 'white',
-                            fontWeight: '800'
+                            fontWeight: '800',
                         }}>Shortlisted </Text>
-                        <Text style={{ fontSize: 66, alignSelf: 'center' }}> 0</Text>
+                        <Text style={{ fontSize: 66, alignSelf: 'center' }}> {shortlistedCount}</Text>
                     </View>
                 </View>
                 <View style={STYLES.carddashboard}>
@@ -65,9 +110,9 @@ const UserDashboard = () => {
                         alignSelf: 'center',
                         fontSize: 18,
                         color: 'white',
-                        fontWeight: '800'
+                        fontWeight: '800',
                     }}>Rejected </Text>
-                    <Text style={{ fontSize: 66, alignSelf: 'center' }}> 0</Text>
+                    <Text style={{ fontSize: 66, alignSelf: 'center' }}> {rejectedCount}</Text>
                 </View>
             </View>
         </ScrollView>

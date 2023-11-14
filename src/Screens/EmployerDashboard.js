@@ -11,27 +11,74 @@ const EmpDashboard = () => {
     const employerData = route.params?.employerData;
     const employerId = employerData.userId;
     const [postedJobsCount, setPostedJobsCount] = useState(0);
+    const [shortlistedCount, setShortlistedCount] = useState(0);
+    const [rejectedCount, setRejectedCount] = useState(0);
+
+
 
     useEffect(() => {
-        const fetchPostedJobsCount = async () => {
+        const fetchData = async () => {
             try {
-                const { data, error } = await supabase
+                // Fetch posted jobs count
+                const { data: postedJobsData, error: postedJobsError } = await supabase
                     .from('jobs')
                     .select('id')
                     .eq('employer_id', employerId);
 
-                if (error) {
-                    console.error('Error fetching posted jobs count:', error);
+                if (postedJobsError) {
+                    console.error('Error fetching posted jobs count:', postedJobsError);
                 } else {
-                    setPostedJobsCount(data.length);
+                    setPostedJobsCount(postedJobsData.length);
+                }
+
+                // Fetch shortlisted data
+                const { data: shortlistedData, error: shortlistedError } = await supabase
+                    .from('jobs')
+                    .select('applied_users_status')
+                    .eq('employer_id', employerId);
+
+                if (shortlistedError) {
+                    console.error('Error fetching shortlisted data:', shortlistedError);
+                } else {
+                    let totalCount = 0;
+
+                    // Iterate through each item in the array
+                    shortlistedData.forEach(item => {
+                        const shortlistedUsers = item.applied_users_status || {};
+                        totalCount += Object.values(shortlistedUsers).filter(status => status === 'shortlisted').length;
+                    });
+
+                    setShortlistedCount(totalCount);
+                    console.log("shortttttt", shortlistedCount)
+                }
+
+                // Fetch rejected data
+                const { data: rejectedData, error: rejectedError } = await supabase
+                    .from('jobs')
+                    .select('applied_users_status')
+                    .eq('employer_id', employerId);
+
+                if (rejectedError) {
+                    console.error('Error fetching rejected data:', rejectedError);
+                } else {
+                    let totalCount = 0;
+
+                    // Iterate through each item in the array
+                    rejectedData.forEach(item => {
+                        const rejectedUsers = item.applied_users_status || {};
+                        totalCount += Object.values(rejectedUsers).filter(status => status === 'rejected').length;
+                    });
+
+                    setRejectedCount(totalCount);
                 }
             } catch (error) {
                 console.error('Error:', error.message);
             }
         };
 
-        fetchPostedJobsCount();
+        fetchData();
     }, [employerId]);
+
     return (
         <ScrollView >
             <View style={{ width: '100%' }}>
@@ -55,9 +102,9 @@ const EmpDashboard = () => {
                             alignSelf: 'center',
                             fontSize: 18,
                             color: 'white',
-                            fontWeight: '800'
+                            fontWeight: '800',
                         }}>Shortlisted </Text>
-                        <Text style={{ fontSize: 66, alignSelf: 'center' }}> 0</Text>
+                        <Text style={{ fontSize: 66, alignSelf: 'center' }}> {shortlistedCount}</Text>
                     </View>
                 </View>
                 <View style={STYLES.carddashboard}>
@@ -65,9 +112,9 @@ const EmpDashboard = () => {
                         alignSelf: 'center',
                         fontSize: 18,
                         color: 'white',
-                        fontWeight: '800'
+                        fontWeight: '800',
                     }}>Rejected </Text>
-                    <Text style={{ fontSize: 66, alignSelf: 'center' }}> 0</Text>
+                    <Text style={{ fontSize: 66, alignSelf: 'center' }}> {rejectedCount}</Text>
                 </View>
             </View>
         </ScrollView>

@@ -37,6 +37,9 @@ const EmployerScreen = () => {
     const postjob = () => {
         setpost(true);
     };
+    const Viewcan = () => {
+        navigation.navigate('Viewcandidate')
+    };
 
     const postj = async () => {
         try {
@@ -99,7 +102,7 @@ const EmployerScreen = () => {
                 </View>
 
                 <View style={{ marginTop: 33 }}>
-                    <TouchableOpacity onPress={() => navigation.navigate('Viewcandidate')} style={STYLES.cloudButton} >
+                    <TouchableOpacity onPress={Viewcan} style={STYLES.cloudButton} >
                         <Text style={STYLES.buttonText}>View candidate</Text>
                     </TouchableOpacity>
                 </View>

@@ -55,6 +55,12 @@ const STYLES = StyleSheet.create({
         marginTop: 18,
         // position: 'absolute'
     },
+    appliedline: {
+        borderBottomWidth: 1,
+        borderBottomColor: COLORS.dark,
+        marginTop: 18,
+        // position: 'absolute'
+    },
     card: {
         backgroundColor: COLORS.light,
         borderRadius: 10,
@@ -92,6 +98,7 @@ const STYLES = StyleSheet.create({
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 6,
     },
+
     jobTitle: {
         fontSize: 18,
         color: 'white',
@@ -171,6 +178,15 @@ const STYLES = StyleSheet.create({
         marginTop: 25,
         alignSelf: 'center'
     },
+    shortButton: {
+        backgroundColor: 'green',
+        borderRadius: 20,
+        // paddingHorizontal: 32,
+        paddingVertical: 10,
+        width: width * 0.20,
+        marginTop: 25,
+        alignSelf: 'center'
+    },
     closeButton: {
         backgroundColor: COLORS.light,
         borderRadius: 20,
@@ -189,6 +205,7 @@ const STYLES = StyleSheet.create({
 
 
     },
+
     registerText: {
         color: COLORS.light,
         textDecorationLine: 'underline',
@@ -211,6 +228,7 @@ const STYLES = StyleSheet.create({
         fontWeight: '800',
         fontSize: 19,
         color: COLORS.dark,
+        alignSelf: 'center'
 
     },
     modaledit: {

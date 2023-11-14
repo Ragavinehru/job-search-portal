@@ -18,7 +18,7 @@ import UserDashboard from './src/Screens/UserDashboard';
 import Favourites from './src/Screens/Myfavourites';
 import Viewcandidate from './src/Screens/Viewcandidates';
 import EmpDashboard from './src/Screens/EmployerDashboard';
-
+import Toast from 'react-native-toast-message';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +41,7 @@ const App = () => {
         <Stack.Screen name="Viewcandidate" component={Viewcandidate} />
         <Stack.Screen name="Empdashboard" component={EmpDashboard} />
       </Stack.Navigator>
+
     </NavigationContainer>
   )
 }

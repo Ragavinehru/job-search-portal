@@ -5,6 +5,7 @@ import { supabase } from '../../supabase';
 import STYLES from '../styles';
 
 
+
 const Postedjobs = () => {
     const route = useRoute();
     // const empdetails = employerData;
@@ -38,35 +39,35 @@ const Postedjobs = () => {
 
 
 
-    useEffect(() => {
-        // When postedJobs are available, map and fetch applied users for each job
-        if (postedJobs.length > 0) {
-            Promise.all(postedJobs.map(async (job) => {
-                const appliedUsers = await fetchAppliedUsersForJob(job);
-                return { job, applied_users: appliedUsers };
-            })).then((details) => {
-                setPostedJobDetails(details);
-            });
-        }
-    }, [postedJobs]);
+    // useEffect(() => {
+    //     // When postedJobs are available, map and fetch applied users for each job
+    //     if (postedJobs.length > 0) {
+    //         Promise.all(postedJobs.map(async (job) => {
+    //             const appliedUsers = await fetchAppliedUsersForJob(job);
+    //             return { job, applied_users: appliedUsers };
+    //         })).then((details) => {
+    //             setPostedJobDetails(details);
+    //         });
+    //     }
+    // }, [postedJobs]);
 
-    const fetchAppliedUsersForJob = async (job) => {
-        const { data, error } = await supabase
-            .from('jobs')
-            .select('applied_users')
-            .eq('id', job.job.id);
+    // const fetchAppliedUsersForJob = async (job) => {
+    //     const { data, error } = await supabase
+    //         .from('jobs')
+    //         .select('applied_users')
+    //         .eq('id', job.job.id);
 
-        if (error) {
-            console.error('Error fetching applied users for job:', error);
-            return [];
-        } else {
-            const appliedUsers = data[0]?.applied_users || [];
-            console.log("yyyyyyyyyyyyyyyyyyyyyyy", appliedUsers)
-            console.log(`Fetched applied users for job ${job.job.id}:`, appliedUsers);
-            return appliedUsers;
-        }
-    };
-    console.log("hahahha");
+    //     if (error) {
+    //         console.error('Error fetching applied users for job:', error);
+    //         return [];
+    //     } else {
+    //         const appliedUsers = data[0]?.applied_users || [];
+    //         console.log("yyyyyyyyyyyyyyyyyyyyyyy", appliedUsers)
+    //         console.log(`Fetched applied users for job ${job.job.id}:`, appliedUsers);
+    //         return appliedUsers;
+    //     }
+    // };
+    // console.log("hahahha");
 
 
     //delete the job 
@@ -80,13 +81,14 @@ const Postedjobs = () => {
             if (error) {
                 console.error('Error deleting posted job:', error);
             } else {
-
+                // Update the state after successful deletion
                 setPostedJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
             }
         } catch (error) {
             console.error('Error:', error.message);
         }
     };
+
 
     return (
         <ScrollView >
@@ -107,22 +109,6 @@ const Postedjobs = () => {
                             <Text style={STYLES.postedjob}>{item.title}</Text>
                             <Text style={STYLES.jobDescription}> Location: {item.location}</Text>
                             <Text style={STYLES.jobDescription}>Company Name: {item.company_name}</Text>
-                            {/* {item.applied_users && item.applied_users.map((userId) => (
-                                <UserDetails key={userId} userId={userId} />
-                            ))} */}
-                            {/* {item.applied_users.map((userId) => (
-                                <UserDetails key={userId} userId={userId} />
-                            ))} */}
-                            {postedJobDetails.length > 0 && (
-                                <View>
-                                    <Text>Applied Users:</Text>
-                                    {postedJobDetails
-                                        .find((details) => details.job.id === item.id)
-                                        ?.applied_users.map((userId) => (
-                                            <Text key={userId}>{userId}</Text>
-                                        ))}
-                                </View>
-                            )}
                         </View>
                     )}
                 />
