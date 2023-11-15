@@ -20,6 +20,7 @@ import Viewcandidate from './src/Screens/Viewcandidates';
 import EmpDashboard from './src/Screens/EmployerDashboard';
 import Toast from 'react-native-toast-message';
 
+
 const Stack = createNativeStackNavigator();
 
 const App = () => {

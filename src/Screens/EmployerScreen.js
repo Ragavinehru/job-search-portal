@@ -87,7 +87,7 @@ const EmployerScreen = () => {
 
                 </View>
                 <Text style={{ marginTop: 5, fontSize: 20, color: COLORS.light }}>
-                    Post a Job,Find perfect candidate!
+                    Find perfect candidate!
                 </Text>
                 <TouchableOpacity onPress={() => navigation.navigate('empprofile', { employerData: employerData })}>
                     <Image style={STYLES.person} source={require('../assets/person.png')}></Image>
@@ -110,79 +110,81 @@ const EmployerScreen = () => {
             </View>
 
             <Modal visible={post} transparent={false} animationType="slide" onRequestClose={() => setpost(false)}>
-                <Text style={{ fontSize: 22, color: COLORS.dark, marginTop: 82, marginRight: 10, alignSelf: 'center' }}>Post A Job</Text>
-                <View style={{ marginTop: 23 }}>
-                    <TextInput
-                        style={STYLES.postinput}
-                        placeholder="Job Title"
-                        value={jobtitle}
-                        onChangeText={setjobtitle}
-                    />
-                    <TextInput
-                        style={STYLES.postinput}
-                        placeholder="Description"
-                        value={des}
-                        onChangeText={setdes}
-                    />
+                <ScrollView>
+                    <Text style={{ fontSize: 22, color: COLORS.dark, marginTop: 82, marginRight: 10, alignSelf: 'center' }}>Post A Job</Text>
+                    <View style={{ marginTop: 23 }}>
+                        <TextInput
+                            style={STYLES.postinput}
+                            placeholder="Job Title"
+                            value={jobtitle}
+                            onChangeText={setjobtitle}
+                        />
+                        <TextInput
+                            style={STYLES.postinput}
+                            placeholder="Description"
+                            value={des}
+                            onChangeText={setdes}
+                        />
 
-                    <TextInput
-                        style={STYLES.postinput}
-                        placeholder="Experience"
-                        value={exp}
-                        onChangeText={setexp}
-                    />
-                    <TextInput
-                        style={STYLES.postinput}
-                        placeholder="Contact"
-                        value={contact}
-                        onChangeText={setcontact}
-                    />
-                    <TextInput
-                        style={STYLES.postinput}
-                        placeholder="Location"
-                        value={loca}
-                        onChangeText={setloca}
-                    />
-                    <TextInput
-                        style={STYLES.postinput}
-                        placeholder="Company Name"
-                        value={comname}
-                        onChangeText={setcomname}
-                    />
-                    <TextInput
-                        style={STYLES.postinput}
-                        placeholder="Package"
-                        value={pack}
-                        onChangeText={setpackage}
-                    />
-                    <TextInput
-                        style={STYLES.postinput}
-                        placeholder="Openings"
-                        value={openings}
-                        onChangeText={setopening}
-                    />
-                    <TextInput
-                        style={STYLES.postinput}
-                        placeholder="Education"
-                        value={edu}
-                        onChangeText={setedu}
-                    />
-                    <TextInput
-                        style={STYLES.postinput}
-                        placeholder="Skills"
-                        value={skills}
-                        onChangeText={setskills}
-                    />
-                </View>
-                <View style={{ flexDirection: 'row', marginTop: 37, alignSelf: 'center' }}>
-                    <TouchableOpacity style={STYLES.cloudButton}>
-                        <Text style={STYLES.buttonText} onPress={postj}>Post</Text>
-                    </TouchableOpacity>
+                        <TextInput
+                            style={STYLES.postinput}
+                            placeholder="Experience"
+                            value={exp}
+                            onChangeText={setexp}
+                        />
+                        <TextInput
+                            style={STYLES.postinput}
+                            placeholder="Contact"
+                            value={contact}
+                            onChangeText={setcontact}
+                        />
+                        <TextInput
+                            style={STYLES.postinput}
+                            placeholder="Location"
+                            value={loca}
+                            onChangeText={setloca}
+                        />
+                        <TextInput
+                            style={STYLES.postinput}
+                            placeholder="Company Name"
+                            value={comname}
+                            onChangeText={setcomname}
+                        />
+                        <TextInput
+                            style={STYLES.postinput}
+                            placeholder="Package"
+                            value={pack}
+                            onChangeText={setpackage}
+                        />
+                        <TextInput
+                            style={STYLES.postinput}
+                            placeholder="Openings"
+                            value={openings}
+                            onChangeText={setopening}
+                        />
+                        <TextInput
+                            style={STYLES.postinput}
+                            placeholder="Education"
+                            value={edu}
+                            onChangeText={setedu}
+                        />
+                        <TextInput
+                            style={STYLES.postinput}
+                            placeholder="Skills"
+                            value={skills}
+                            onChangeText={setskills}
+                        />
+                    </View>
+                    <View style={{ flexDirection: 'row', marginTop: 37, alignSelf: 'center' }}>
+                        <TouchableOpacity style={STYLES.cloudButton}>
+                            <Text style={STYLES.buttonText} onPress={postj}>Post</Text>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity style={{ ...STYLES.cloudButton, marginLeft: 12 }} >
-                        <Text style={STYLES.buttonText} onPress={() => setpost(false)}>Close</Text>
-                    </TouchableOpacity>
-                </View>
+                        <TouchableOpacity style={{ ...STYLES.cloudButton, marginLeft: 12 }} >
+                            <Text style={STYLES.buttonText} onPress={() => setpost(false)}>Close</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
             </Modal>
             <Image style={{ width: '100%', height: '47%', marginLeft: -7, marginTop: -29 }} source={require('../assets/emppage.png')} />
 

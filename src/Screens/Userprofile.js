@@ -1,14 +1,15 @@
 //import liraries
-import { View, Text, TouchableOpacity, Image, Modal, TextInput, Button } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Modal, TextInput, Button, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { supabase } from '../../supabase';
+import { supabase, uploadFile } from '../../supabase';
 import STYLES from '../styles';
 import COLORS from '../colors/color';
 import UserDashboard from './UserDashboard';
 // import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
-import ImagePicker from 'react-native-image-picker';
+
 import DocumentPicker from 'react-native-document-picker';
+import Pdf from 'react-native-pdf';
 
 
 
@@ -21,6 +22,7 @@ const Userprofile = ({ route }) => {
 
   console.log("favour", favorites);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [resumemodal, setresume] = useState(false);
   const [userdetails, setuserdetails] = useState(userData);
   const [username, setusername] = useState('');
   const [usermobile, setuserMobile] = useState('');
@@ -80,7 +82,7 @@ const Userprofile = ({ route }) => {
       console.error('Error during logout:', error.message);
     }
   };
- 
+
 
   // ...
   const openFilePicker = async () => {
@@ -88,52 +90,67 @@ const Userprofile = ({ route }) => {
       const result = await DocumentPicker.pick({
         type: [DocumentPicker.types.allFiles],
       });
-  
-      console.log('File picked:', result);
-      // const fileName = result.name;
-      // const urifile = result.uri;
-      
-      if (result.length > 0) {
-        const pickedFile = result[0]; 
-  
-        const fileName = pickedFile.name;
-        console.log("filename",fileName);
-        // const { uri, name } = result; // Destructure uri and name from result
-  
-        // const filePath = `${userId}/${fileName}`;
-  
-        try {
-          const { data, error } = await supabase.storage
-            .from('job_portal')
-            .upload(`${userId}/${fileName}`, result.uri);
-  console.log("resumme",data);
 
-          if (error) {
-            console.error('Error uploading the file:', error.message);
-            
-          } else {
-            // Update the 'resume' column in the 'users' table with the file path.
-            const resumePath = `${userId}/${fileName}`;
-            const { data, error } = await supabase
-              .from('users')
-              .update({ resume: resumePath })
-              .eq('userId', userId);
-  
-            if (error) {
-              console.error('Error updating user profile with resume:', error.message);
-            } else {
-              console.log('Resume uploaded and user profile updated successfully.');
-            }
-          }
-        } catch (error) {
-          console.error('Error during file upload:', error.message);
-        }
+      console.log('File picked:', result);
+
+      if (result.length > 0) {
+
+        var FileInterface = {
+          fileName: result[0].name,
+          file: result[0],
+        };
+
+        console.log("FileInterface : ", FileInterface);
+
+        const resume = await uploadFile(FileInterface);
+        console.log("resume code", resume)
+
       }
+      // if (result.length > 0) {
+      //   const pickedFile = result[0];
+
+      //   const fileName = pickedFile.name;
+      //   console.log("filename", fileName);
+      //   // const { uri, name } = result; 
+
+      //   // const filePath = `${userId}/${fileName}`;
+
+      //   try {
+      //     const { data, error } = await supabase.storage
+      //       .from('job_portal')
+      //       .upload(`${userId}/${fileName}`, result.uri)
+
+      //     console.log("resumme", data);
+
+      //     if (error) {
+      //       console.error('Error uploading the file:', error.message);
+
+      //     } else {
+      //       // Update the 'resume' column in the 'users' table with the file path.
+      //       const resumePath = `${userId}/${fileName}`;
+      //       const { data, error } = await supabase
+      //         .from('users')
+      //         .update({ resume: resumePath })
+      //         .eq('userId', userId);
+
+      //       if (error) {
+      //         console.error('Error updating user profile with resume:', error.message);
+      //       } else {
+      //         console.log('Resume uploaded and user profile updated successfully.');
+      //       }
+      //     }
+      //   } catch (error) {
+      //     console.error('Error during file upload:', error.message);
+      //   }
+      // }
     } catch (error) {
       console.error('Error during file selection:', error);
     }
   };
+
+
   return (
+
     <View style={{ marginTop: 100, marginLeft: 33 }}>
       <TouchableOpacity onPress={navigation.goBack}>
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 2, marginTop: -70 }}> Back </Text>
@@ -157,6 +174,9 @@ const Userprofile = ({ route }) => {
       <View style={{ flexDirection: 'row', fontSize: 27, marginTop: 12 }}>
         <Text style={STYLES.profiledetails} >Location: {userdetails.location}</Text>
       </View>
+      <TouchableOpacity onPress={() => setresume(true)} style={{ marginTop: 15, marginLeft: -6 }} >
+        <Text style={STYLES.registerText}>My Resume</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={{ marginTop: 15, marginLeft: -6 }} >
         <Text onPress={() => navigation.navigate('Favour', {
 
@@ -170,17 +190,17 @@ const Userprofile = ({ route }) => {
 
         })} style={STYLES.registerText}>My Dashboard</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={{ flexDirection: 'row', marginLeft: -76, marginTop: 160 }}>
+      <TouchableOpacity style={{ flexDirection: 'row', marginLeft: -76, marginTop: 120 }}>
         <Image style={{ width: 30, height: 30, marginLeft: 77, marginTop: 10 }} source={require('../assets/logout.png')} />
         <Text style={{ color: 'red', marginTop: 15 }}
           onPress={handleLogout}
         >Logout</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity  style={{ flexDirection: 'row', marginLeft: 'auto', marginTop: -44, marginRight: 33 }}>
+      <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 'auto', marginTop: -44, marginRight: 33 }}>
         <Image style={{ width: 30, height: 30, marginLeft: 77, marginTop: 10 }} source={require('../assets/upload.png')} />
         <Text style={{ color: COLORS.light, marginTop: 15 }}
-       onPress={openFilePicker}
+          onPress={openFilePicker}
         >Upload</Text>
       </TouchableOpacity>
 
@@ -230,12 +250,33 @@ const Userprofile = ({ route }) => {
         </View>
 
       </Modal>
+
+      {/* <Modal visible={resumemodal}
+        transparent={true}> */}
+      {/* <View style={{ flex: 1, backgroundColor: 'red' }}>
+          <Pdf
+            source={{ uri: url, cache: true }}
+            onLoadComplete={(numberOfPages, filePath) => {
+              console.log(`Number of pages: ${numberOfPages}`);
+            }}
+            onPageChanged={(page, numberOfPages) => {
+              console.log(`Current page: ${page}`);
+            }}
+            onError={(error) => {
+              console.error('Error while loading PDF:', error);
+            }}
+            style={{ flex: 1 }}
+          />
+          <Text onPress={() => setresume(false)} style={{ fontSize: 20, marginLeft: 10, color: 'red' }}>close</Text>
+        </View> */}
+      {/* </Modal> */}
     </View>
+
   );
 };
 
 
 
 
-//make this component available to the app
+
 export default Userprofile;

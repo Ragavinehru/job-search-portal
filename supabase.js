@@ -14,13 +14,30 @@ export const supabase = createClient(supabaseUrl, supabaseKey,
         },
     }
 )
-// export const supabase = createClient(supabaseUrl, supabaseKey, {
-    // auth: {
-    //     storage: AsyncStorage,
-    //     autoRefreshToken: true,
-    //     persistSession: true,
-    //     detectSessionInUrl: false,
-    // },
+
+
+export const uploadFile = async (fileinterface) => {
+    console.log("fileinterface : ", fileinterface);
+    console.log("fileinterface : ", fileinterface.fileName, fileinterface.file);
+
+    const { data, error } = await supabase.storage.from('job_portal').upload(fileinterface.fileName, fileinterface.file)
+    console.log("supabase", data, error)
+    if (error) {
+        // Handle error
+    } else {
+        // Handle success
+        const { data: url } = await supabase.storage.from('job_portal').getPublicUrl(data.path);
+        console.log("url ||:", url);
+        return url;
+    }
+}
+// export const Uploadfile = createClient(supabaseUrl, supabaseKey, {
+//     auth: {
+//         storage: AsyncStorage,
+//         autoRefreshToken: true,
+//         persistSession: true,
+//         detectSessionInUrl: false,
+//     },
 // })
 
 // export default supabase;

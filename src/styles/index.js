@@ -31,7 +31,7 @@ const STYLES = StyleSheet.create({
     person: {
         width: '15%',
         height: '47%',
-        marginLeft: '77%',
+        marginLeft: '74%',
         marginTop: '-12%'
     },
     personuser: {
@@ -88,7 +88,7 @@ const STYLES = StyleSheet.create({
     cardposted: {
         backgroundColor: 'white',
         borderRadius: 10,
-        padding: 44,
+        padding: 34,
         margin: 8,
         elevation: 7,
         width: '80%',
@@ -234,11 +234,22 @@ const STYLES = StyleSheet.create({
     modaledit: {
         backgroundColor: 'white',
         borderRadius: 10,
-        padding: 50,
+        padding: 80,
         backgroundColor: COLORS.light,
         margin: 20,
+        width: '70%',
         alignItems: 'center',
 
+    },
+    editjob: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 10,
+        backgroundColor: COLORS.light,
+        margin: 20,
+        width: '70%',
+        elevation: 2,
+        alignItems: 'center',
     },
 
     jobDpackage: {

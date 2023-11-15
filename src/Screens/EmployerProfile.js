@@ -1,5 +1,5 @@
 
-import { View, Text, TouchableOpacity, Image, Modal, TextInput, Button } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Modal, TextInput, Button, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { supabase } from '../../supabase';
@@ -78,6 +78,7 @@ const EmployerProfile = () => {
   }, [employerData]);
 
   return (
+
     <View style={{ marginTop: 100, marginLeft: 33 }}>
       <TouchableOpacity onPress={navigation.goBack}>
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: -12, marginTop: -60 }}> Back </Text>
@@ -163,6 +164,7 @@ const EmployerProfile = () => {
 
       </Modal>
     </View>
+
   );
 }
 
