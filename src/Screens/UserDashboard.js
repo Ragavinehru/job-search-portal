@@ -13,7 +13,7 @@ const UserDashboard = () => {
     const [appliedJobsCount, setAppliedJobsCount] = useState(0);
     const [shortlistedCount, setShortlistedCount] = useState(0);
     const [rejectedCount, setRejectedCount] = useState(0);
-
+    const [hrCount, sethrCount] = useState(0);
     useEffect(() => {
         const fetchAppliedJobsCount = async () => {
             try {
@@ -68,6 +68,27 @@ const UserDashboard = () => {
                     setRejectedCount(totalCount);
                 }
 
+
+                     // Fetch hr round data
+                     const { data: Hrdata, error: hrdataError } = await supabase
+                     .from('jobs')
+                     .select('applied_users_status')
+                 // .eq('applied_users', userId);
+ 
+                 if (hrdataError) {
+                     console.error('Error fetching shortlisted data:', hrdataError);
+                 } else {
+                     let totalCount = 0;
+ 
+                     // Iterate through each item in the array
+                     Hrdata.forEach(item => {
+                         const hrUsers = item.applied_users_status || {};
+                         totalCount += Object.values(hrUsers).filter(status => status === 'Hr Round').length;
+                     });
+ 
+                     sethrCount(totalCount);
+                 }
+ 
             } catch (error) {
                 console.error('Error:', error.message);
             }
@@ -105,6 +126,7 @@ const UserDashboard = () => {
                         <Text style={{ fontSize: 66, alignSelf: 'center' }}> {shortlistedCount}</Text>
                     </View>
                 </View>
+                <View style={{ flexDirection: 'row' }}>
                 <View style={STYLES.carddashboard}>
                     <Text style={{
                         alignSelf: 'center',
@@ -113,6 +135,16 @@ const UserDashboard = () => {
                         fontWeight: '800',
                     }}>Rejected </Text>
                     <Text style={{ fontSize: 66, alignSelf: 'center' }}> {rejectedCount}</Text>
+                </View>
+                <View style={STYLES.carddashboard}>
+                    <Text style={{
+                        alignSelf: 'center',
+                        fontSize: 18,
+                        color: 'white',
+                        fontWeight: '800',
+                    }}>Hr Round </Text>
+                    <Text style={{ fontSize: 66, alignSelf: 'center' }}> {hrCount}</Text>
+                </View>
                 </View>
             </View>
         </ScrollView>

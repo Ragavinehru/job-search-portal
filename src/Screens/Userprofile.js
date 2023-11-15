@@ -6,14 +6,17 @@ import { supabase } from '../../supabase';
 import STYLES from '../styles';
 import COLORS from '../colors/color';
 import UserDashboard from './UserDashboard';
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
-
+// import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
+import ImagePicker from 'react-native-image-picker';
+import DocumentPicker from 'react-native-document-picker';
 
 
 
 const Userprofile = ({ route }) => {
   const navigation = useNavigation();
   const userData = route.params?.userData;
+  const userId = global.userId;
+  console.log('Global User profile screen ID:', userId);
   const favorites = route.params?.favorites;
 
   console.log("favour", favorites);
@@ -77,48 +80,59 @@ const Userprofile = ({ route }) => {
       console.error('Error during logout:', error.message);
     }
   };
+ 
 
-  // const openFilePicker = async () => {
-  //   try {
-  //     const result = await DocumentPicker.pick({
-  //       type: [DocumentPickerUtil.allFiles()],
-  //     });
+  // ...
+  const openFilePicker = async () => {
+    try {
+      const result = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles],
+      });
+  
+      console.log('File picked:', result);
+      // const fileName = result.name;
+      // const urifile = result.uri;
+      
+      if (result.length > 0) {
+        const pickedFile = result[0]; 
+  
+        const fileName = pickedFile.name;
+        console.log("filename",fileName);
+        // const { uri, name } = result; // Destructure uri and name from result
+  
+        // const filePath = `${userId}/${fileName}`;
+  
+        try {
+          const { data, error } = await supabase.storage
+            .from('job_portal')
+            .upload(`${userId}/${fileName}`, result.uri);
+  console.log("resumme",data);
 
-  //     if (result) {
-  //       // The 'result' object contains information about the selected file.
-  //       const { uri, type, name, size } = result;
-
-  //       // You can now upload the file to Supabase or your server.
-
-  //       // For Supabase, you can use the storage API to upload the file.
-  //       // Replace 'YOUR_BUCKET' with the actual name of your bucket in Supabase.
-  //       const { data, error } = await supabase.storage
-  //         .from('job_portal')
-  //         .upload(`resumes/${userData.userId}/${name}`, uri);
-
-  //       if (error) {
-  //         console.error('Error uploading the file:', error.message);
-  //       } else {
-  //         // The file is successfully uploaded, and 'data.Key' contains the file path.
-
-  //         // Update the 'resume' column in the 'users' table with the file path.
-  //         const resumePath = `resumes/${userData.userId}/${name}`;
-  //         const { data, error } = await supabase
-  //           .from('users')
-  //           .update({ resume: resumePath })
-  //           .eq('userId', userData.userId);
-
-  //         if (error) {
-  //           console.error('Error updating user profile with resume:', error.message);
-  //         } else {
-  //           console.log('Resume uploaded and user profile updated successfully.');
-  //         }
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error('Error during file selection:', error);
-  //   }
-  // };
+          if (error) {
+            console.error('Error uploading the file:', error.message);
+            
+          } else {
+            // Update the 'resume' column in the 'users' table with the file path.
+            const resumePath = `${userId}/${fileName}`;
+            const { data, error } = await supabase
+              .from('users')
+              .update({ resume: resumePath })
+              .eq('userId', userId);
+  
+            if (error) {
+              console.error('Error updating user profile with resume:', error.message);
+            } else {
+              console.log('Resume uploaded and user profile updated successfully.');
+            }
+          }
+        } catch (error) {
+          console.error('Error during file upload:', error.message);
+        }
+      }
+    } catch (error) {
+      console.error('Error during file selection:', error);
+    }
+  };
   return (
     <View style={{ marginTop: 100, marginLeft: 33 }}>
       <TouchableOpacity onPress={navigation.goBack}>
@@ -163,12 +177,12 @@ const Userprofile = ({ route }) => {
         >Logout</Text>
       </TouchableOpacity>
 
-      {/* <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 'auto', marginTop: -44, marginRight: 33 }}>
+      <TouchableOpacity  style={{ flexDirection: 'row', marginLeft: 'auto', marginTop: -44, marginRight: 33 }}>
         <Image style={{ width: 30, height: 30, marginLeft: 77, marginTop: 10 }} source={require('../assets/upload.png')} />
         <Text style={{ color: COLORS.light, marginTop: 15 }}
-        // onPress={openFilePicker}
+       onPress={openFilePicker}
         >Upload</Text>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
 
 
       <Modal visible={isModalVisible}

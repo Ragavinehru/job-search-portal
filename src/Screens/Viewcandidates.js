@@ -1,16 +1,28 @@
-import { View, Text, TouchableOpacity, ScrollView, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, FlatList ,Image} from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { supabase } from '../../supabase';
 import STYLES from '../styles';
 import COLORS from '../colors/color';
 import Toast from 'react-native-toast-message';
+// import { Pdf } from 'react-native-pdf';
+import { Pdf, RnImageViewer } from 'react-native-pdf'; 
+import { storage } from 'supabase'
+
+
+
+
 
 
 const Viewcandidate = () => {
     const navigation = useNavigation();
     const [postedJobs, setPostedJobs] = useState([]);
     const [appliedUsers, setAppliedUsers] = useState([]);
+    const [viewingResume, setViewingResume] = useState(false);
+    const [resumeData, setResumeData] = useState(null);
+    const [loadingResume, setLoadingResume] = useState(false);
+    const [resumeError, setResumeError] = useState(null);
+
     const userId = global.userId;
     console.log('Global view id:', userId);
 
@@ -139,8 +151,53 @@ const Viewcandidate = () => {
         }
     };
 
+   
 
-
+    const viewResume = async (userId, filename) => {
+        try {
+            const { data, error } = await supabase.storage
+              .from('job_portal')
+              .head(`${userId}/${filename}`);
+          
+            if (error) {
+              console.error('Error checking file existence:', error);
+              setResumeError('Error checking file existence. Please try again.');
+            } else if (!data) {
+              console.error('File does not exist.');
+              setResumeError('File does not exist.');
+            } else {
+              // File exists, proceed with downloading it
+              viewResume(userId, filename);
+            }
+          } catch (error) {
+            console.error('Error during file existence check:', error.message);
+            setResumeError('Error during file existence check. Please try again.');
+          }
+        try {
+          setLoadingResume(true); // Set loading indicator
+    
+          const { data, error } = await supabase.storage
+            .from('job_portal')
+            .download(`${userId}/${filename}`);
+    
+          if (error) {
+            console.error('Error fetching resume:', error);
+            setResumeError('Error fetching resume. Please try again.');
+          } else if (!data) {
+            console.error('Resume data is null or undefined.');
+            setResumeError('Resume data is null or undefined.');
+          } else {
+            setResumeData(data);
+            setViewingResume(true);
+          }
+        } catch (error) {
+          console.error('Error during resume retrieval:', error.message);
+          setResumeError('Error during resume retrieval. Please try again.'); // Set error message
+        } finally {
+          setLoadingResume(false); // Clear loading indicator, whether successful or not
+        }
+      };
+    
     return (
         <ScrollView>
             <View style={{ width: '100%' }}>
@@ -168,8 +225,26 @@ const Viewcandidate = () => {
 
                                     return (
                                         <View key={appliedUserId}>
-                                            <Text style={STYLES.jobDescription}>Name: {user.name || 'Unknown User'}</Text>
-                                            <Text style={STYLES.jobDescription}>Contact Info: {user.email || 'Unknown Email'}</Text>
+                                            <Text style={{...STYLES.jobDescription,marginTop:15}}>Name: {user.name || 'Unknown User'}</Text>
+                                            <Text style={STYLES.jobDescription}>Contact: {user.email || 'Unknown Email'}</Text>
+                                            <TouchableOpacity
+                      style={{ flexDirection: 'row' }}
+                      onPress={() => viewResume(appliedUserId, 'pdf')}
+                    >
+                      <Image
+                        style={{ width: 25, height: 25, marginTop: -30, marginLeft: 'auto' }}
+                        source={require('../assets/upload.png')}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{ flexDirection: 'row' }}
+                      onPress={() => viewResume(appliedUserId, 'jpeg')}
+                    >
+                      <Image
+                        style={{ width: 25, height: 25, marginTop: -30, marginLeft: 'auto' }}
+                        source={require('../assets/upload.png')}
+                      />
+                    </TouchableOpacity>
                                             <View style={{ flexDirection: 'row', marginTop: 3, alignSelf: 'center' }}>
                                                 <TouchableOpacity style={STYLES.shortButton}
                                                     onPress={() => handleShortlist(item.id, appliedUserId)}>
@@ -198,7 +273,32 @@ const Viewcandidate = () => {
                         </View>
                     )}
                 />
-            </View>
+     {viewingResume && (
+        <View style={{ flex: 1 }}>
+          {loadingResume ? (
+            <Text>Loading resume...</Text>
+          ) : resumeError ? (
+            <Text style={{ color: 'red' }}>{resumeError}</Text>
+          ) : (
+            // Use conditional rendering based on the file type
+            resumeData && resumeData.type === 'application/pdf' ? (
+              <Pdf
+                fadeInDuration={250.0}
+                style={{ flex: 1 }}
+                source={{ uri: 'data:application/pdf;base64,' + resumeData.data, cache: true }}
+              />
+            ) : (
+              <RnImageViewer
+                imageUrls={[{ url: 'data:image/jpeg;base64,' + resumeData.data }]}
+                enableSwipeDown
+                renderIndicator={() => null} // Optional: Render a custom indicator
+                onSwipeDown={() => setViewingResume(false)}
+              />
+          )  )}
+          
+        </View>
+      )}
+      </View>
         </ScrollView >
     );
 };
