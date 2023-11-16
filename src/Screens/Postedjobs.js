@@ -177,18 +177,21 @@ const Postedjobs = () => {
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <View style={STYLES.editjob}>
                             <Text style={{ fontWeight: '700', fontSize: 20, alignSelf: 'center', color: COLORS.dark }}>Edit Job</Text>
+                            <Text style={{ marginRight: 'auto', marginBottom: -25, marginLeft: 24, color: COLORS.dark }}>Title:</Text>
                             <TextInput
                                 placeholder="Title"
                                 value={editJobTitle}
                                 onChangeText={(text) => setEditJobTitle(text)}
                                 style={STYLES.useredit}
                             />
+                            <Text style={{ marginRight: 'auto', marginLeft: 26, marginBottom: -25, color: COLORS.dark }}>Location:</Text>
                             <TextInput
                                 placeholder="Location"
                                 value={editJobLocation}
                                 onChangeText={(text) => setEditJobLocation(text)}
                                 style={STYLES.useredit}
                             />
+                            <Text style={{ marginRight: 'auto', marginLeft: 26, marginBottom: -25, color: COLORS.dark }}>CompanyName:</Text>
                             <TextInput
                                 placeholder="Company Name"
                                 value={editJobCompanyName}
@@ -196,9 +199,9 @@ const Postedjobs = () => {
                                 style={STYLES.useredit}
                             />
                             <View style={{ flexDirection: 'row', marginTop: 16 }}>
-                                <Text style={{ color: '#1229EE', fontSize: 20 }} onPress={saveEditedJob} >Save</Text>
+                                <Text style={{ color: '#1229EE', fontSize: 15 }} onPress={saveEditedJob} >Save</Text>
 
-                                <Text onPress={closeEditModal} style={{ fontSize: 20, marginLeft: 10, color: 'red' }}>close</Text>
+                                <Text onPress={closeEditModal} style={{ fontSize: 15, marginLeft: 10, color: 'red' }}>close</Text>
                             </View>
 
                         </View>

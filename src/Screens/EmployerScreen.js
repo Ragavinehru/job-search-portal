@@ -33,6 +33,15 @@ const EmployerScreen = () => {
     const [edu, setedu] = useState('');
     const [skills, setskills] = useState('');
 
+    const handleLogout = async () => {
+        try {
+            await supabase.auth.signOut();
+            navigation.navigate('login');
+
+        } catch (error) {
+            console.error('Error during logout:', error.message);
+        }
+    };
 
     const postjob = () => {
         setpost(true);
@@ -79,6 +88,12 @@ const EmployerScreen = () => {
 
                 <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 12, }}> Back</Text>
 
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 'auto', marginRight: 25, marginTop: -20 }}>
+                {/* <Image style={{ width: 30, height: 30, }} source={require('../assets/logout.png')} /> */}
+                <Text style={{ color: 'red', fontSize: 16 }}
+                    onPress={handleLogout}
+                >Logout</Text>
             </TouchableOpacity>
 
             <View style={{ marginLeft: 15, marginTop: 55 }}>

@@ -98,6 +98,19 @@ const STYLES = StyleSheet.create({
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 6,
     },
+    cardfav: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 14,
+        margin: 8,
+        elevation: 7,
+        width: '80%',
+        alignSelf: 'center',
+        borderRadius: 15,
+        shadowColor: COLORS.dark,
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 6,
+    },
 
     jobTitle: {
         fontSize: 18,
@@ -127,12 +140,12 @@ const STYLES = StyleSheet.create({
     },
     useredit: {
         borderWidth: 1,
-        borderColor: COLORS.dark,
+        borderColor: COLORS.light,
         width: '80%',
         // height: '20%',
         borderRadius: 15,
-        fontSize: 16,
-        marginTop: 15,
+        fontSize: 15,
+        marginTop: 25,
         alignSelf: 'center'
     },
     search: {
@@ -225,30 +238,34 @@ const STYLES = StyleSheet.create({
     },
     profiledetails: {
         flexDirection: 'row', fontSize: 33, marginTop: 12,
-        fontWeight: '800',
+        fontWeight: '600',
         fontSize: 19,
         color: COLORS.dark,
         alignSelf: 'center'
 
     },
     modaledit: {
-        backgroundColor: 'white',
+
         borderRadius: 10,
-        padding: 80,
-        backgroundColor: COLORS.light,
+        padding: 10,
+        backgroundColor: '#F5EEF8',
         margin: 20,
         width: '70%',
+        borderRadius: 10,
+        elevation: 4,
+        shadowColor: COLORS.dark,
         alignItems: 'center',
+        alignSelf: 'center'
 
     },
     editjob: {
-        backgroundColor: 'white',
+        backgroundColor: '#F5EEF8',
         borderRadius: 10,
         padding: 10,
-        backgroundColor: COLORS.light,
+
         margin: 20,
         width: '70%',
-        elevation: 2,
+        elevation: 7,
         alignItems: 'center',
     },
 

@@ -26,15 +26,15 @@ const EmployerProfile = () => {
   console.log('Global User ID:', userId);
   console.log("123455", empdetails)
 
-  const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut();
-      navigation.navigate('login');
+  // const handleLogout = async () => {
+  //   try {
+  //     await supabase.auth.signOut();
+  //     navigation.navigate('login');
 
-    } catch (error) {
-      console.error('Error during logout:', error.message);
-    }
-  };
+  //   } catch (error) {
+  //     console.error('Error during logout:', error.message);
+  //   }
+  // };
 
   const handleUpdateProfile = async () => {
 
@@ -87,7 +87,7 @@ const EmployerProfile = () => {
       <TouchableOpacity>
         <Text onPress={() => setModalVisible(true)} style={{ fontSize: 20, fontWeight: 'bold', marginTop: -60, marginRight: 30, marginLeft: 'auto' }}>Edit Profile</Text>
       </TouchableOpacity>
-      <Image style={{ width: '43%', height: '29%', alignSelf: 'center', marginLeft: -30, marginTop: 10 }} source={require('../assets/user.png')} />
+      <Image style={{ width: '43%', height: '32%', alignSelf: 'center', marginLeft: -30, marginTop: 10 }} source={require('../assets/user.png')} />
       <View style={{ flexDirection: 'row', fontSize: 27, marginTop: 7 }}>
         <Text style={STYLES.profiledetails}>Name: {empdetails.name}</Text>
       </View>
@@ -109,17 +109,19 @@ const EmployerProfile = () => {
         <Text style={STYLES.registerText}>My Dashboard</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={{ flexDirection: 'row', marginLeft: -76, marginTop: 160 }}>
+      {/* <TouchableOpacity style={{ flexDirection: 'row', marginLeft: -76, marginTop: 160 }}>
         <Image style={{ width: 30, height: 30, marginLeft: 77, marginTop: 10 }} source={require('../assets/logout.png')} />
         <Text style={{ color: 'red', marginTop: 15 }}
           onPress={handleLogout}
         >Logout</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <Modal visible={isModalVisible}
         transparent={true}>
+
         <View style={STYLES.modaledit}>
-          <Text style={{ marginRight: 159 }}>Name:</Text>
+          <Text style={{ fontSize: 15, color: 'black' }}>Edit Profile</Text>
+          <Text style={{ marginRight: 159, marginBottom: -26 }}>Name:</Text>
           <TextInput
             editable={true}
             style={STYLES.useredit}
@@ -127,7 +129,7 @@ const EmployerProfile = () => {
             value={employeename}
             onChangeText={(text) => setEmployeename(text)}
           />
-          <Text style={{ marginRight: 159 }}>Email:</Text>
+          <Text style={{ marginRight: 159, marginBottom: -26 }}>Email:</Text>
           <TextInput
             editable={true}
             style={STYLES.useredit}
@@ -135,7 +137,7 @@ const EmployerProfile = () => {
             value={email}
             onChangeText={(text) => setEmail(text)}
           />
-          <Text style={{ marginRight: 159 }}>Mobile:</Text>
+          <Text style={{ marginRight: 159, marginBottom: -26 }}>Mobile:</Text>
           <TextInput
             editable={true}
             style={STYLES.useredit}
@@ -143,7 +145,7 @@ const EmployerProfile = () => {
             value={mobile}
             onChangeText={(text) => setMobile(text)}
           />
-          <Text style={{ marginRight: 112 }}>CompanyName:</Text>
+          <Text style={{ marginRight: 112, marginBottom: -26 }}>CompanyName:</Text>
           <TextInput
             editable={true}
             style={STYLES.useredit}
@@ -152,9 +154,9 @@ const EmployerProfile = () => {
             onChangeText={(text) => setCompanyName(text)}
           />
           <View style={{ flexDirection: 'row', marginTop: 16 }}>
-            <Text style={{ color: 'black', fontSize: 20 }} onPress={handleUpdateProfile} >Update profile</Text>
+            <Text style={{ color: 'black', fontSize: 15 }} onPress={handleUpdateProfile} >Update profile</Text>
 
-            <Text onPress={() => setModalVisible(false)} style={{ fontSize: 20, marginLeft: 10, color: 'red' }}>close</Text>
+            <Text onPress={() => setModalVisible(false)} style={{ fontSize: 15, marginLeft: 10, color: 'red' }}>close</Text>
           </View>
 
           {/* <TouchableOpacity onPress={() => setModalVisible(false)}>

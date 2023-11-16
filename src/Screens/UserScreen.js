@@ -27,7 +27,18 @@ const UserScreen = () => {
     const [filterSalary, setFilterSalary] = useState('');
     const [filterExperience, setFilterExperience] = useState('');
     const [isFilterModalVisible, setFilterModalVisible] = useState(false);
+    const [favorites, setFavorites] = useState([]);
     // const isAlphaNumeric = (str) => /^[a-zA-Z0-9]+$/.test(str);
+
+    const handleLogout = async () => {
+        try {
+            await supabase.auth.signOut();
+            navigation.navigate('login');
+
+        } catch (error) {
+            console.error('Error during logout:', error.message);
+        }
+    };
 
     const filterJobs = () => {
         let filteredData = [...jobs];
@@ -130,7 +141,7 @@ const UserScreen = () => {
 
     );
 
-    const [favorites, setFavorites] = useState([]);
+
     // Fetch jobs from Supabase
     useEffect(() => {
         async function fetchJobs() {
@@ -146,23 +157,22 @@ const UserScreen = () => {
         fetchJobs();
     }, []);
 
-    // Load favorites from AsyncStorage when the component first loads
-    useEffect(() => {
-        async function loadFavorites() {
-            try {
-                const storedFavorites = await AsyncStorage.getItem('favorites');
-                if (storedFavorites) {
-                    setFavorites(JSON.parse(storedFavorites));
-                }
-            } catch (error) {
-                console.error('Error loading favorites from AsyncStorage:', error);
-            }
-        }
+    // // Load favorites from AsyncStorage when the component first loads
+    // useEffect(() => {
+    //     async function loadFavorites() {
+    //         try {
+    //             const storedFavorites = await AsyncStorage.getItem('favorites');
+    //             if (storedFavorites) {
+    //                 setFavorites(JSON.parse(storedFavorites));
+    //             }
+    //         } catch (error) {
+    //             console.error('Error loading favorites from AsyncStorage:', error);
+    //         }
+    //     }
 
-        loadFavorites();
-    }, []);
+    //     loadFavorites();
+    // }, []);
 
-    // Update the toggleFavorite function
     const toggleFavorite = async (jobId) => {
         const updatedFavorites = favorites.includes(jobId)
             ? favorites.filter(id => id !== jobId)
@@ -171,16 +181,28 @@ const UserScreen = () => {
         try {
             setFavorites(updatedFavorites);
             await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-            await supabase.from('users').upsert([
-                {
-                    userId: loggeduserid,
-                    favorite_jobs: updatedFavorites,
-                },
-            ]);
+
+            // Update the favorite_jobs column in the users table
+            const { data, error } = await supabase
+                .from('users')
+                .upsert([
+                    {
+                        userId: userId,
+                        favourite: updatedFavorites,
+                    },
+                ]);
+
+            if (error) {
+                console.error('Error updating favorite_jobs column:', error);
+            }
+            else {
+                console.log("succes favourited")
+            }
         } catch (error) {
             console.error('Error updating favorites:', error);
         }
     };
+
     console.log("kkkkkkkkk", favorites);
 
     return (
@@ -193,6 +215,12 @@ const UserScreen = () => {
 
                 <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 12, marginTop: 10 }}> Back </Text>
 
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 'auto', marginRight: 25, marginTop: -20 }}>
+                {/* <Image style={{ width: 30, height: 30, }} source={require('../assets/logout.png')} /> */}
+                <Text style={{ color: 'red', }}
+                    onPress={handleLogout}
+                >Logout</Text>
             </TouchableOpacity>
 
 

@@ -7,7 +7,8 @@ import COLORS from '../colors/color';
 import Toast from 'react-native-toast-message';
 // import { Pdf } from 'react-native-pdf';
 import { Pdf, RnImageViewer } from 'react-native-pdf';
-import { storage } from 'supabase'
+import { storage } from 'supabase';
+import { Linking } from 'react-native';
 
 
 
@@ -155,9 +156,10 @@ const Viewcandidate = () => {
 
   const viewResume = async (userId, filename) => {
     try {
+      // Check if the file exists in storage
       const { data, error } = await supabase.storage
         .from('job_portal')
-        .head(`${userId}/${filename}`);
+        .getMetadata(`${userId}/${filename}`);
 
       if (error) {
         console.error('Error checking file existence:', error);
@@ -166,16 +168,22 @@ const Viewcandidate = () => {
         console.error('File does not exist.');
         setResumeError('File does not exist.');
       } else {
-        // File exists, proceed with downloading it
-        viewResume(userId, filename);
+        // File exists, download the resume
+        downloadResume(userId, filename);
       }
     } catch (error) {
       console.error('Error during file existence check:', error.message);
       setResumeError('Error during file existence check. Please try again.');
     }
+  };
+
+
+  const openResume = async (userId, filename) => {
+
     try {
       setLoadingResume(true); // Set loading indicator
 
+      // Download the resume file
       const { data, error } = await supabase.storage
         .from('job_portal')
         .download(`${userId}/${filename}`);
@@ -187,12 +195,18 @@ const Viewcandidate = () => {
         console.error('Resume data is null or undefined.');
         setResumeError('Resume data is null or undefined.');
       } else {
-        setResumeData(data);
-        setViewingResume(true);
+        // Display the resume
+        if (Platform.OS === 'ios') {
+          // On iOS, open the file in Safari
+          Linking.openURL(`data:application/pdf;base64,${data}`);
+        } else {
+          // On Android, use a PDF viewer app if available, or download and open in default viewer
+          Linking.openURL(`data:application/pdf;base64,${data}`);
+        }
       }
     } catch (error) {
       console.error('Error during resume retrieval:', error.message);
-      setResumeError('Error during resume retrieval. Please try again.'); // Set error message
+      setResumeError('Error during resume retrieval. Please try again.');
     } finally {
       setLoadingResume(false);
     }
@@ -229,14 +243,14 @@ const Viewcandidate = () => {
                       <Text style={STYLES.jobDescription}>Contact: {user.email || 'Unknown Email'}</Text>
                       <TouchableOpacity
                         style={{ flexDirection: 'row' }}
-                        onPress={() => viewResume(appliedUserId, 'pdf')}
+                        onPress={() => viewResume(appliedUserId, `${appliedUserId}.pdf`)}
                       >
                         <Image
-                          style={{ width: 25, height: 25, marginTop: -30, marginLeft: 'auto' }}
+                          style={{ width: 25, height: 25, marginTop: -39, marginLeft: 'auto' }}
                           source={require('../assets/upload.png')}
                         />
                       </TouchableOpacity>
-                      <TouchableOpacity
+                      {/* <TouchableOpacity
                         style={{ flexDirection: 'row' }}
                         onPress={() => viewResume(appliedUserId, 'jpeg')}
                       >
@@ -244,7 +258,7 @@ const Viewcandidate = () => {
                           style={{ width: 25, height: 25, marginTop: -30, marginLeft: 'auto' }}
                           source={require('../assets/upload.png')}
                         />
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
                       <View style={{ flexDirection: 'row', marginTop: 3, alignSelf: 'center' }}>
                         <TouchableOpacity style={STYLES.shortButton}
                           onPress={() => handleShortlist(item.id, appliedUserId)}>
