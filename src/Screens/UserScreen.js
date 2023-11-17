@@ -205,6 +205,8 @@ const UserScreen = () => {
 
     console.log("kkkkkkkkk", favorites);
 
+    
+
     return (
         //     <KeyboardAvoidingView
         //     style={{ flex: 1 }}
@@ -218,7 +220,7 @@ const UserScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 'auto', marginRight: 25, marginTop: -20 }}>
                 {/* <Image style={{ width: 30, height: 30, }} source={require('../assets/logout.png')} /> */}
-                <Text style={{ color: 'red', }}
+                <Text style={{ color: 'red',fontSize:17 }}
                     onPress={handleLogout}
                 >Logout</Text>
             </TouchableOpacity>

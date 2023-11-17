@@ -55,11 +55,15 @@ const Favourites = ({ route }) => {
         data={favoriteJobs}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
+          <TouchableOpacity
+          onPress={() => navigation.navigate('jobdetails', { jobData: item })}
+        >
           <View key={item.id} style={STYLES.cardfav}>
             <Text style={STYLES.profiledetails}>{item.title}</Text>
             <Text style={STYLES.profiledetails}>{item.location}</Text>
             {/* Add more job details as needed */}
           </View>
+          </TouchableOpacity>
         )}
       />
     </ScrollView>

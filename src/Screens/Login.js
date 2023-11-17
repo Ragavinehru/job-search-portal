@@ -5,6 +5,7 @@ import { supabase } from '../../supabase';
 import STYLES from '../styles';
 import COLORS from '../colors/color';
 import { Alert } from 'react-native';
+import { ToastAndroid, Platform} from 'react-native';
 
 const Login = () => {
 
@@ -65,7 +66,7 @@ const Login = () => {
             try {
                 if (userData) {
 
-                    Alert.alert('Sign In Successful', 'You are now signed in as a regular user.');
+                    ToastAndroid.show("Sign In Successfull! User", ToastAndroid.LONG)
                     setEmail('');
                     setPassword('');
                     // navigation.navigate("userscreen", { userData: userData });
@@ -75,7 +76,7 @@ const Login = () => {
                     });
                 } else if (employerData) {
 
-                    Alert.alert('Sign In Successful', 'You are now signed in as an employer.');
+                    ToastAndroid.show("Sign In Successfull! Employer", ToastAndroid.LONG)
                     setEmail('');
                     setPassword('');
                     navigation.navigate('home', { employerData: employerData });

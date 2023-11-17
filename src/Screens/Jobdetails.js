@@ -18,6 +18,12 @@ const Jobdetails = () => {
   // const getCurrentUser = () => {
   //   return supabase.auth.user();
   // };
+  const routeParams = route.params || {};
+// const jobD = routeParams.jobData || {};
+
+console.log('routeParams:', routeParams);
+console.log('jobData:', jobData);
+
   const [alreadyApplied, setAlreadyApplied] = useState(false);
 
   useEffect(() => {
@@ -75,6 +81,7 @@ const Jobdetails = () => {
         } else {
           console.log('Applied for the job successfully.', updatedData);
           setAlreadyApplied(true);
+          checkIfAlreadyApplied();
 
         }
       } catch (error) {
@@ -82,6 +89,40 @@ const Jobdetails = () => {
       }
     }
   };
+
+const checkIfAlreadyApplied = async () => {
+  try {
+    const { data: jobRecord, error: fetchError } = await supabase
+      .from('jobs')
+      .select('applied_users')
+      .eq('id', JobId);
+
+    if (fetchError) {
+      console.error('Error fetching job data:', fetchError);
+      return;
+    }
+
+    const existingAppliedUsers = jobRecord[0].applied_users || [];
+
+    if (existingAppliedUsers.includes(profileid)) {
+      setAlreadyApplied(true);
+    }
+
+    // Fetch and set the total number of applicants
+    const totalApplicants = existingAppliedUsers.length;
+    // Assuming you have a state variable for totalApplicants, e.g., setTotalApplicants
+    setTotalApplicants(totalApplicants);
+
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};
+useEffect(() => {
+  checkIfAlreadyApplied();
+}, []);
+
+// Assuming you have a state variable for totalApplicants
+const [totalApplicants, setTotalApplicants] = useState(0);
 
 
 
@@ -118,6 +159,9 @@ const Jobdetails = () => {
               You have applied for this job!.
             </Text>
           )}
+          <Text  style={{ fontSize: 19, color: COLORS.dark, marginTop:100 }}>
+  Total Applicants: {totalApplicants}
+</Text>
         </View>
 
 

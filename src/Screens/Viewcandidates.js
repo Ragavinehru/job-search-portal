@@ -4,11 +4,13 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { supabase } from '../../supabase';
 import STYLES from '../styles';
 import COLORS from '../colors/color';
-import Toast from 'react-native-toast-message';
+
 // import { Pdf } from 'react-native-pdf';
 import { Pdf, RnImageViewer } from 'react-native-pdf';
 import { storage } from 'supabase';
 import { Linking } from 'react-native';
+import { ToastAndroid, Platform} from 'react-native';
+
 
 
 
@@ -109,7 +111,7 @@ const Viewcandidate = () => {
         .update({ applied_users_status: newStatus })
         .eq('id', jobId);
 
-
+        ToastAndroid.show("shorlisted", ToastAndroid.LONG)
 
       console.log("shorlisted")
     } catch (error) {
@@ -145,7 +147,7 @@ const Viewcandidate = () => {
         .eq('id', jobId);
 
 
-
+        ToastAndroid.show("", ToastAndroid.LONG)
       console.log("rejected")
     } catch (error) {
       console.error('Error rejecting user:', error);
@@ -153,35 +155,13 @@ const Viewcandidate = () => {
   };
 
 
+  //_#####################
+  const [resumeModalVisible, setResumeModalVisible] = useState(false);
 
-  const viewResume = async (userId, filename) => {
+  const openResumeModal = async (userId, filename) => {
     try {
-      // Check if the file exists in storage
-      const { data, error } = await supabase.storage
-        .from('job_portal')
-        .getMetadata(`${userId}/${filename}`);
-
-      if (error) {
-        console.error('Error checking file existence:', error);
-        setResumeError('Error checking file existence. Please try again.');
-      } else if (!data) {
-        console.error('File does not exist.');
-        setResumeError('File does not exist.');
-      } else {
-        // File exists, download the resume
-        downloadResume(userId, filename);
-      }
-    } catch (error) {
-      console.error('Error during file existence check:', error.message);
-      setResumeError('Error during file existence check. Please try again.');
-    }
-  };
-
-
-  const openResume = async (userId, filename) => {
-
-    try {
-      setLoadingResume(true); // Set loading indicator
+      setViewingResume(true); // Set this state to true to trigger the rendering of the modal
+      setLoadingResume(true);
 
       // Download the resume file
       const { data, error } = await supabase.storage
@@ -195,14 +175,11 @@ const Viewcandidate = () => {
         console.error('Resume data is null or undefined.');
         setResumeError('Resume data is null or undefined.');
       } else {
-        // Display the resume
-        if (Platform.OS === 'ios') {
-          // On iOS, open the file in Safari
-          Linking.openURL(`data:application/pdf;base64,${data}`);
-        } else {
-          // On Android, use a PDF viewer app if available, or download and open in default viewer
-          Linking.openURL(`data:application/pdf;base64,${data}`);
-        }
+        // Set the resume data to be displayed in the modal
+        setResumeData({
+          data: `data:application/pdf;base64,${data}`,
+          type: 'application/pdf',
+        });
       }
     } catch (error) {
       console.error('Error during resume retrieval:', error.message);
@@ -211,6 +188,63 @@ const Viewcandidate = () => {
       setLoadingResume(false);
     }
   };
+  // const viewResume = async (userId, filename) => {
+  //   try {
+  //     // Check if the file exists in storage
+  //     const { data, error } = await supabase.storage
+  //       .from('job_portal')
+  //       .getMetadata(`${userId}/${filename}`);
+
+  //     if (error) {
+  //       console.error('Error checking file existence:', error);
+  //       setResumeError('Error checking file existence. Please try again.');
+  //     } else if (!data) {
+  //       console.error('File does not exist.');
+  //       setResumeError('File does not exist.');
+  //     } else {
+  //       // File exists, download the resume
+  //       downloadResume(userId, filename);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error during file existence check:', error.message);
+  //     setResumeError('Error during file existence check. Please try again.');
+  //   }
+  // };
+
+
+  // const openResume = async (userId, filename) => {
+
+  //   try {
+  //     setLoadingResume(true); // Set loading indicator
+
+  //     // Download the resume file
+  //     const { data, error } = await supabase.storage
+  //       .from('job_portal')
+  //       .download(`${userId}/${filename}`);
+
+  //     if (error) {
+  //       console.error('Error fetching resume:', error);
+  //       setResumeError('Error fetching resume. Please try again.');
+  //     } else if (!data) {
+  //       console.error('Resume data is null or undefined.');
+  //       setResumeError('Resume data is null or undefined.');
+  //     } else {
+  //       // Display the resume
+  //       if (Platform.OS === 'ios') {
+  //         // On iOS, open the file in Safari
+  //         Linking.openURL(`data:application/pdf;base64,${data}`);
+  //       } else {
+  //         // On Android, use a PDF viewer app if available, or download and open in default viewer
+  //         Linking.openURL(`data:application/pdf;base64,${data}`);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error('Error during resume retrieval:', error.message);
+  //     setResumeError('Error during resume retrieval. Please try again.');
+  //   } finally {
+  //     setLoadingResume(false);
+  //   }
+  // };
 
   return (
     <ScrollView>
@@ -243,7 +277,7 @@ const Viewcandidate = () => {
                       <Text style={STYLES.jobDescription}>Contact: {user.email || 'Unknown Email'}</Text>
                       <TouchableOpacity
                         style={{ flexDirection: 'row' }}
-                        onPress={() => viewResume(appliedUserId, `${appliedUserId}.pdf`)}
+                        onPress={() => openResumeModal(appliedUserId, `${appliedUserId}.pdf`)}
                       >
                         <Image
                           style={{ width: 25, height: 25, marginTop: -39, marginLeft: 'auto' }}
@@ -287,30 +321,35 @@ const Viewcandidate = () => {
             </View>
           )}
         />
-        {viewingResume && (
-          <View style={{ flex: 1 }}>
-            {loadingResume ? (
-              <Text>Loading resume...</Text>
-            ) : resumeError ? (
-              <Text style={{ color: 'red' }}>{resumeError}</Text>
-            ) : (
-              // Use conditional rendering based on the file type
-              resumeData && resumeData.type === 'application/pdf' ? (
-                <Pdf
-                  fadeInDuration={250.0}
-                  style={{ flex: 1 }}
-                  source={{ uri: 'data:application/pdf;base64,' + resumeData.data, cache: true }}
-                />
+      {viewingResume && (
+          // Modal for displaying the resume
+          <Modal
+            visible={resumeModalVisible}
+            onRequestClose={() => setResumeModalVisible(false)}
+          >
+            <View style={{ flex: 1 }}>
+              {loadingResume ? (
+                <Text>Loading resume...</Text>
+              ) : resumeError ? (
+                <Text style={{ color: 'red' }}>{resumeError}</Text>
               ) : (
-                <RnImageViewer
-                  imageUrls={[{ url: 'data:image/jpeg;base64,' + resumeData.data }]}
-                  enableSwipeDown
-                  renderIndicator={() => null} // Optional: Render a custom indicator
-                  onSwipeDown={() => setViewingResume(false)}
-                />
-              ))}
-
-          </View>
+                // Use conditional rendering based on the file type
+                resumeData && resumeData.type === 'application/pdf' ? (
+                  <Pdf
+                    fadeInDuration={250.0}
+                    style={{ flex: 1 }}
+                    source={{ uri: resumeData.data, cache: true }}
+                  />
+                ) : (
+                  <RnImageViewer
+                    imageUrls={[{ url: resumeData.data }]}
+                    enableSwipeDown
+                    renderIndicator={() => null}
+                    onSwipeDown={() => setResumeModalVisible(false)}
+                  />
+                ))}
+            </View>
+          </Modal>
         )}
       </View>
     </ScrollView >
