@@ -4,7 +4,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { supabase } from '../../supabase';
 import STYLES from '../styles';
 
-// create a component
+
 const EmpDashboard = () => {
     const navigation = useNavigation();
     const route = useRoute();
@@ -19,7 +19,7 @@ const EmpDashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch posted jobs count
+
                 const { data: postedJobsData, error: postedJobsError } = await supabase
                     .from('jobs')
                     .select('id')
@@ -31,7 +31,7 @@ const EmpDashboard = () => {
                     setPostedJobsCount(postedJobsData.length);
                 }
 
-                // Fetch shortlisted data
+
                 const { data: shortlistedData, error: shortlistedError } = await supabase
                     .from('jobs')
                     .select('applied_users_status')
@@ -42,7 +42,7 @@ const EmpDashboard = () => {
                 } else {
                     let totalCount = 0;
 
-                    // Iterate through each item in the array
+
                     shortlistedData.forEach(item => {
                         const shortlistedUsers = item.applied_users_status || {};
                         totalCount += Object.values(shortlistedUsers).filter(status => status === 'shortlisted').length;

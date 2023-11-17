@@ -79,7 +79,7 @@ const Postedjobs = () => {
 
     const closeEditModal = () => {
         setIsEditModalVisible(false);
-        // Clear edit job details
+
         setEditJobId(null);
         setEditJobTitle('');
         setEditJobLocation('');
@@ -107,7 +107,7 @@ const Postedjobs = () => {
                 ])
                 .eq('id', editJobId);
 
-            // Close the edit modal
+
 
             // setPostedJobs(data);
 

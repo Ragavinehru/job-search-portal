@@ -7,7 +7,7 @@ import STYLES from '../styles';
 import COLORS from '../colors/color';
 import UserDashboard from './UserDashboard';
 // import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
-
+import { ToastAndroid, Platform } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import Pdf from 'react-native-pdf';
 import { Alert } from 'react-native';
@@ -121,6 +121,7 @@ const Userprofile = ({ route }) => {
       }
 
     } catch (error) {
+      ToastAndroid.show("File Already Exist", ToastAndroid.LONG)
       console.error('Error during file selection:', error);
     }
   };
@@ -231,7 +232,7 @@ const Userprofile = ({ route }) => {
           <Text onPress={() => setResumeModal(false)} style={{ fontSize: 20, marginTop: 10, marginLeft: 10, color: COLORS.dark }}>Back</Text>
           <Pdf
             trustAllCerts={false}
-            // source={{ uri: "https://jmmmahusotnqiiyjmnnh.supabase.co/storage/v1/object/public/job_portal/9f7fee41-4c50-4ef4-b9de-eed27d8e6497.pdf" }}
+
             source={{ uri: pdfurl }}
 
             onLoadComplete={(numberOfPages, filePath) => {

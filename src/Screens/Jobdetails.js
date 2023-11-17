@@ -19,10 +19,10 @@ const Jobdetails = () => {
   //   return supabase.auth.user();
   // };
   const routeParams = route.params || {};
-// const jobD = routeParams.jobData || {};
+  // const jobD = routeParams.jobData || {};
 
-console.log('routeParams:', routeParams);
-console.log('jobData:', jobData);
+  console.log('routeParams:', routeParams);
+  console.log('jobData:', jobData);
 
   const [alreadyApplied, setAlreadyApplied] = useState(false);
 
@@ -90,39 +90,39 @@ console.log('jobData:', jobData);
     }
   };
 
-const checkIfAlreadyApplied = async () => {
-  try {
-    const { data: jobRecord, error: fetchError } = await supabase
-      .from('jobs')
-      .select('applied_users')
-      .eq('id', JobId);
+  const checkIfAlreadyApplied = async () => {
+    try {
+      const { data: jobRecord, error: fetchError } = await supabase
+        .from('jobs')
+        .select('applied_users')
+        .eq('id', JobId);
 
-    if (fetchError) {
-      console.error('Error fetching job data:', fetchError);
-      return;
+      if (fetchError) {
+        console.error('Error fetching job data:', fetchError);
+        return;
+      }
+
+      const existingAppliedUsers = jobRecord[0].applied_users || [];
+
+      if (existingAppliedUsers.includes(profileid)) {
+        setAlreadyApplied(true);
+      }
+
+
+      const totalApplicants = existingAppliedUsers.length;
+
+      setTotalApplicants(totalApplicants);
+
+    } catch (error) {
+      console.error('Error:', error.message);
     }
+  };
+  useEffect(() => {
+    checkIfAlreadyApplied();
+  }, []);
 
-    const existingAppliedUsers = jobRecord[0].applied_users || [];
 
-    if (existingAppliedUsers.includes(profileid)) {
-      setAlreadyApplied(true);
-    }
-
-    // Fetch and set the total number of applicants
-    const totalApplicants = existingAppliedUsers.length;
-    // Assuming you have a state variable for totalApplicants, e.g., setTotalApplicants
-    setTotalApplicants(totalApplicants);
-
-  } catch (error) {
-    console.error('Error:', error.message);
-  }
-};
-useEffect(() => {
-  checkIfAlreadyApplied();
-}, []);
-
-// Assuming you have a state variable for totalApplicants
-const [totalApplicants, setTotalApplicants] = useState(0);
+  const [totalApplicants, setTotalApplicants] = useState(0);
 
 
 
@@ -142,10 +142,10 @@ const [totalApplicants, setTotalApplicants] = useState(0);
         </View>
 
 
-        <View style={{ marginVertical: '100%', marginTop: -170, paddingLeft: 26, }}>
+        <View style={{ marginVertical: '100%', marginTop: -190, paddingLeft: 26, }}>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: COLORS.dark }}>Job Description</Text>
           <Text style={{ fontSize: 16, marginVertical: 10 }}>{jobData.description}</Text>
-          <Text style={{ fontSize: 19, fontWeight: '400' }}>Experience: {jobData.experience}</Text>
+          <Text style={{ fontSize: 16, color: COLORS.dark, fontWeight: '400', marginTop: 10 }}>Experience: {jobData.experience}</Text>
           <Text style={{ fontSize: 16, color: COLORS.dark, marginTop: 10 }}>Package: {jobData.package}</Text>
           <Text style={{ fontSize: 16, color: COLORS.dark, marginTop: 10 }}>Openings: {jobData.openings}</Text>
           <Text style={{ fontSize: 16, color: COLORS.dark, marginTop: 10 }}>Education: {jobData.education}</Text>
@@ -159,9 +159,9 @@ const [totalApplicants, setTotalApplicants] = useState(0);
               You have applied for this job!.
             </Text>
           )}
-          <Text  style={{ fontSize: 19, color: COLORS.dark, marginTop:100 }}>
-  Total Applicants: {totalApplicants}
-</Text>
+          <Text style={{ fontSize: 19, color: COLORS.dark, marginTop: 100 }}>
+            Total Applicants: {totalApplicants}
+          </Text>
         </View>
 
 

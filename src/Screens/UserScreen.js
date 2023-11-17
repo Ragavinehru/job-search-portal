@@ -68,7 +68,7 @@ const UserScreen = () => {
     const sortJobsByPackage = () => {
         const sortedJobs = [...jobs];
         sortedJobs.sort((a, b) => {
-            // Extract numeric part from the "Package" field and compare
+
             const numericPackageA = parseInt(a.package, 10);
             const numericPackageB = parseInt(b.package, 10);
             return numericPackageA - numericPackageB;
@@ -81,7 +81,7 @@ const UserScreen = () => {
     const sortJobsByExperience = () => {
         const sortedJobs = [...jobs];
         sortedJobs.sort((a, b) => {
-            // Convert experience to numbers for comparison
+
             const experienceA = parseInt(a.experience, 10);
             const experienceB = parseInt(b.experience, 10);
             return experienceA - experienceB; // Sort in ascending order
@@ -182,7 +182,7 @@ const UserScreen = () => {
             setFavorites(updatedFavorites);
             await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
 
-            // Update the favorite_jobs column in the users table
+
             const { data, error } = await supabase
                 .from('users')
                 .upsert([
@@ -205,7 +205,7 @@ const UserScreen = () => {
 
     console.log("kkkkkkkkk", favorites);
 
-    
+
 
     return (
         //     <KeyboardAvoidingView
@@ -213,14 +213,10 @@ const UserScreen = () => {
         //     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         // >
         <ScrollView style={{ width: '100%' }}>
-            <TouchableOpacity onPress={navigation.goBack}>
 
-                <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 12, marginTop: 10 }}> Back </Text>
-
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 'auto', marginRight: 25, marginTop: -20 }}>
+            <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 'auto', marginRight: 12 }}>
                 {/* <Image style={{ width: 30, height: 30, }} source={require('../assets/logout.png')} /> */}
-                <Text style={{ color: 'red',fontSize:17 }}
+                <Text style={{ color: 'red', fontSize: 17 }}
                     onPress={handleLogout}
                 >Logout</Text>
             </TouchableOpacity>

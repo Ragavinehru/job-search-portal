@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, FlatList, Image } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, FlatList, Image, Modal } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { supabase } from '../../supabase';
@@ -6,10 +6,9 @@ import STYLES from '../styles';
 import COLORS from '../colors/color';
 
 // import { Pdf } from 'react-native-pdf';
-import { Pdf, RnImageViewer } from 'react-native-pdf';
-import { storage } from 'supabase';
-import { Linking } from 'react-native';
-import { ToastAndroid, Platform} from 'react-native';
+import Pdf from 'react-native-pdf';
+
+import { ToastAndroid, Platform } from 'react-native';
 
 
 
@@ -21,10 +20,9 @@ const Viewcandidate = () => {
   const navigation = useNavigation();
   const [postedJobs, setPostedJobs] = useState([]);
   const [appliedUsers, setAppliedUsers] = useState([]);
-  const [viewingResume, setViewingResume] = useState(false);
-  const [resumeData, setResumeData] = useState(null);
-  const [loadingResume, setLoadingResume] = useState(false);
-  const [resumeError, setResumeError] = useState(null);
+
+  const [resumepdfurl, setresumepdfurl] = useState('');
+  const [resumeuser, setResumeuserModal] = useState(false);
 
   const userId = global.userId;
   console.log('Global view id:', userId);
@@ -100,7 +98,7 @@ const Viewcandidate = () => {
 
       const currentStatus = jobData.applied_users_status || {};
 
-      // Update applied_users_status  adding user ID and status
+
       const newStatus = {
         ...currentStatus,
         [userId]: 'shortlisted',
@@ -111,7 +109,7 @@ const Viewcandidate = () => {
         .update({ applied_users_status: newStatus })
         .eq('id', jobId);
 
-        ToastAndroid.show("shorlisted", ToastAndroid.LONG)
+      ToastAndroid.show("shorlisted", ToastAndroid.LONG)
 
       console.log("shorlisted")
     } catch (error) {
@@ -121,7 +119,7 @@ const Viewcandidate = () => {
 
   const handleReject = async (jobId, userId) => {
     try {
-      // Fetch the current applied_users_status value
+
       const { data: jobData, error } = await supabase
         .from('jobs')
         .select('applied_users_status')
@@ -147,7 +145,7 @@ const Viewcandidate = () => {
         .eq('id', jobId);
 
 
-        ToastAndroid.show("", ToastAndroid.LONG)
+      ToastAndroid.show("", ToastAndroid.LONG)
       console.log("rejected")
     } catch (error) {
       console.error('Error rejecting user:', error);
@@ -156,95 +154,39 @@ const Viewcandidate = () => {
 
 
   //_#####################
-  const [resumeModalVisible, setResumeModalVisible] = useState(false);
 
-  const openResumeModal = async (userId, filename) => {
+  const viewResume = async (userId) => {
     try {
-      setViewingResume(true); // Set this state to true to trigger the rendering of the modal
-      setLoadingResume(true);
 
-      // Download the resume file
-      const { data, error } = await supabase.storage
+      const filename = `${userId}.pdf`;
+      console.log("filename view resume", filename)
+
+      const { data: viewresume, error } = await supabase.storage
         .from('job_portal')
-        .download(`${userId}/${filename}`);
+        .createSignedUrl(filename, 60);
+
 
       if (error) {
-        console.error('Error fetching resume:', error);
-        setResumeError('Error fetching resume. Please try again.');
-      } else if (!data) {
-        console.error('Resume data is null or undefined.');
-        setResumeError('Resume data is null or undefined.');
+        console.error('Error checking file existence:', error);
+
       } else {
-        // Set the resume data to be displayed in the modal
-        setResumeData({
-          data: `data:application/pdf;base64,${data}`,
-          type: 'application/pdf',
-        });
+        console.log('File data view resume:', viewresume);
+        const viewresumeurl = viewresume.signedUrl;
+        console.log("resume view resume", viewresumeurl);
+        setresumepdfurl(viewresumeurl);
+        console.log('Resume view pdf:', resumepdfurl);
+
       }
     } catch (error) {
-      console.error('Error during resume retrieval:', error.message);
-      setResumeError('Error during resume retrieval. Please try again.');
-    } finally {
-      setLoadingResume(false);
+      console.error('Error during file existence check:', error.message);
+
     }
   };
-  // const viewResume = async (userId, filename) => {
-  //   try {
-  //     // Check if the file exists in storage
-  //     const { data, error } = await supabase.storage
-  //       .from('job_portal')
-  //       .getMetadata(`${userId}/${filename}`);
+  useEffect(() => {
 
-  //     if (error) {
-  //       console.error('Error checking file existence:', error);
-  //       setResumeError('Error checking file existence. Please try again.');
-  //     } else if (!data) {
-  //       console.error('File does not exist.');
-  //       setResumeError('File does not exist.');
-  //     } else {
-  //       // File exists, download the resume
-  //       downloadResume(userId, filename);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error during file existence check:', error.message);
-  //     setResumeError('Error during file existence check. Please try again.');
-  //   }
-  // };
-
-
-  // const openResume = async (userId, filename) => {
-
-  //   try {
-  //     setLoadingResume(true); // Set loading indicator
-
-  //     // Download the resume file
-  //     const { data, error } = await supabase.storage
-  //       .from('job_portal')
-  //       .download(`${userId}/${filename}`);
-
-  //     if (error) {
-  //       console.error('Error fetching resume:', error);
-  //       setResumeError('Error fetching resume. Please try again.');
-  //     } else if (!data) {
-  //       console.error('Resume data is null or undefined.');
-  //       setResumeError('Resume data is null or undefined.');
-  //     } else {
-  //       // Display the resume
-  //       if (Platform.OS === 'ios') {
-  //         // On iOS, open the file in Safari
-  //         Linking.openURL(`data:application/pdf;base64,${data}`);
-  //       } else {
-  //         // On Android, use a PDF viewer app if available, or download and open in default viewer
-  //         Linking.openURL(`data:application/pdf;base64,${data}`);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error('Error during resume retrieval:', error.message);
-  //     setResumeError('Error during resume retrieval. Please try again.');
-  //   } finally {
-  //     setLoadingResume(false);
-  //   }
-  // };
+    viewResume();
+  }, []);
+  console.log('Resume view pdf outside:', resumepdfurl);
 
   return (
     <ScrollView>
@@ -277,7 +219,12 @@ const Viewcandidate = () => {
                       <Text style={STYLES.jobDescription}>Contact: {user.email || 'Unknown Email'}</Text>
                       <TouchableOpacity
                         style={{ flexDirection: 'row' }}
-                        onPress={() => openResumeModal(appliedUserId, `${appliedUserId}.pdf`)}
+
+                        onPress={() => {
+
+                          viewResume(appliedUserId);
+                          setResumeuserModal(true);
+                        }}
                       >
                         <Image
                           style={{ width: 25, height: 25, marginTop: -39, marginLeft: 'auto' }}
@@ -321,7 +268,45 @@ const Viewcandidate = () => {
             </View>
           )}
         />
-      {viewingResume && (
+        <Modal visible={resumeuser} transparent={true}>
+
+          <View style={{ flex: 1, backgroundColor: 'white' }}>
+            <Text onPress={() => setResumeuserModal(false)} style={{ fontSize: 20, marginTop: 10, marginLeft: 10, color: COLORS.dark }}>Back</Text>
+            {resumepdfurl ? (
+              <Pdf
+                trustAllCerts={false}
+
+                source={{ uri: resumepdfurl }}
+
+                onLoadComplete={(numberOfPages, filePath) => {
+                  console.log(`Number of pages: ${numberOfPages}`);
+                }}
+                onPageChanged={(page, numberOfPages) => {
+                  console.log(`Current page: ${page}`);
+                }}
+                onError={(error) => {
+                  console.log(error);
+                }}
+                onPressLink={(uri) => {
+                  console.log(`Link pressed: ${uri}`);
+                }}
+                style={{
+                  flex: 1,
+                  width: '100%',
+                  height: '100%',
+                }} />
+            ) : (
+              <Text>Loading PDF...</Text>
+            )}
+          </View>
+
+        </Modal>
+
+
+
+
+
+        {/* {viewingResume && (
           // Modal for displaying the resume
           <Modal
             visible={resumeModalVisible}
@@ -350,7 +335,7 @@ const Viewcandidate = () => {
                 ))}
             </View>
           </Modal>
-        )}
+        )} */}
       </View>
     </ScrollView >
   );

@@ -32,6 +32,9 @@ const ForgetPassword = () => {
         console.log("ss", user, error)
         if (user) {
             const res = await supabase.auth.updateUser({ password: forgetpwd })
+            Alert.alert('New password changed ');
+            setemailreset('');
+            setforgetpwd('');
             console.log("dd", res)
         } else {
             Alert.alert('User Not Found');

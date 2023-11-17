@@ -9,7 +9,7 @@ import COLORS from '../colors/color';
 
 
 
-// create a component
+
 const Favourites = ({ route }) => {
   const navigation = useNavigation();
   const favorites = route.params?.favorites;
@@ -23,7 +23,7 @@ const Favourites = ({ route }) => {
     async function fetchFavoriteJobs() {
       try {
         if (favorites.length > 0) {
-          // Fetch the corresponding job details from the jobs table
+
           const { data, error } = await supabase
             .from('jobs')
             .select('*')
@@ -32,7 +32,7 @@ const Favourites = ({ route }) => {
           if (error) {
             console.error('Error fetching favorite jobs:', error.message);
           } else {
-            // Set the favorite jobs in state
+
             setFavoriteJobs(data);
           }
         }
@@ -56,13 +56,13 @@ const Favourites = ({ route }) => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
-          onPress={() => navigation.navigate('jobdetails', { jobData: item })}
-        >
-          <View key={item.id} style={STYLES.cardfav}>
-            <Text style={STYLES.profiledetails}>{item.title}</Text>
-            <Text style={STYLES.profiledetails}>{item.location}</Text>
-            {/* Add more job details as needed */}
-          </View>
+            onPress={() => navigation.navigate('jobdetails', { jobData: item })}
+          >
+            <View key={item.id} style={STYLES.cardfav}>
+              <Text style={STYLES.profiledetails}>{item.title}</Text>
+              <Text style={STYLES.profiledetails}>{item.location}</Text>
+
+            </View>
           </TouchableOpacity>
         )}
       />

@@ -84,12 +84,8 @@ const EmployerScreen = () => {
     };
     return (
         <SafeAreaView style={{ width: '100%', height: '100%' }}>
-            <TouchableOpacity onPress={navigation.goBack}>
 
-                <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 12, }}> Back</Text>
-
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 'auto', marginRight: 25, marginTop: -20 }}>
+            <TouchableOpacity style={{ flexDirection: 'row', marginRight: 25, }}>
                 {/* <Image style={{ width: 30, height: 30, }} source={require('../assets/logout.png')} /> */}
                 <Text style={{ color: 'red', fontSize: 16 }}
                     onPress={handleLogout}

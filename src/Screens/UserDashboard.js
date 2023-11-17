@@ -39,7 +39,7 @@ const UserDashboard = () => {
                 } else {
                     let totalCount = 0;
 
-                    // Iterate through each item in the array
+
                     shortlistedData.forEach(item => {
                         const shortlistedUsers = item.applied_users_status || {};
                         totalCount += Object.values(shortlistedUsers).filter(status => status === 'shortlisted').length;
@@ -48,18 +48,18 @@ const UserDashboard = () => {
                     setShortlistedCount(totalCount);
                 }
 
-                // Fetch rejected data
+
                 const { data: rejectedData, error: rejectedError } = await supabase
                     .from('jobs')
                     .select('applied_users_status')
-                // .eq('applied_users', userId);
+                    .eq('applied_users', userId);
 
                 if (rejectedError) {
                     console.error('Error fetching rejected data:', rejectedError);
                 } else {
                     let totalCount = 0;
 
-                    // Iterate through each item in the array
+
                     rejectedData.forEach(item => {
                         const rejectedUsers = item.applied_users_status || {};
                         totalCount += Object.values(rejectedUsers).filter(status => status === 'rejected').length;
@@ -69,26 +69,26 @@ const UserDashboard = () => {
                 }
 
 
-                     // Fetch hr round data
-                     const { data: Hrdata, error: hrdataError } = await supabase
-                     .from('jobs')
-                     .select('applied_users_status')
-                 // .eq('applied_users', userId);
- 
-                 if (hrdataError) {
-                     console.error('Error fetching shortlisted data:', hrdataError);
-                 } else {
-                     let totalCount = 0;
- 
-                     // Iterate through each item in the array
-                     Hrdata.forEach(item => {
-                         const hrUsers = item.applied_users_status || {};
-                         totalCount += Object.values(hrUsers).filter(status => status === 'Hr Round').length;
-                     });
- 
-                     sethrCount(totalCount);
-                 }
- 
+                // Fetch hr round data
+                const { data: Hrdata, error: hrdataError } = await supabase
+                    .from('jobs')
+                    .select('applied_users_status')
+                // .eq('applied_users', userId);
+
+                if (hrdataError) {
+                    console.error('Error fetching shortlisted data:', hrdataError);
+                } else {
+                    let totalCount = 0;
+
+
+                    Hrdata.forEach(item => {
+                        const hrUsers = item.applied_users_status || {};
+                        totalCount += Object.values(hrUsers).filter(status => status === 'Hr Round').length;
+                    });
+
+                    sethrCount(totalCount);
+                }
+
             } catch (error) {
                 console.error('Error:', error.message);
             }
@@ -127,24 +127,24 @@ const UserDashboard = () => {
                     </View>
                 </View>
                 <View style={{ flexDirection: 'row' }}>
-                <View style={STYLES.carddashboard}>
-                    <Text style={{
-                        alignSelf: 'center',
-                        fontSize: 18,
-                        color: 'white',
-                        fontWeight: '800',
-                    }}>Rejected </Text>
-                    <Text style={{ fontSize: 66, alignSelf: 'center' }}> {rejectedCount}</Text>
-                </View>
-                <View style={STYLES.carddashboard}>
-                    <Text style={{
-                        alignSelf: 'center',
-                        fontSize: 18,
-                        color: 'white',
-                        fontWeight: '800',
-                    }}>Hr Round </Text>
-                    <Text style={{ fontSize: 66, alignSelf: 'center' }}> {hrCount}</Text>
-                </View>
+                    <View style={STYLES.carddashboard}>
+                        <Text style={{
+                            alignSelf: 'center',
+                            fontSize: 18,
+                            color: 'white',
+                            fontWeight: '800',
+                        }}>Rejected </Text>
+                        <Text style={{ fontSize: 66, alignSelf: 'center' }}> {rejectedCount}</Text>
+                    </View>
+                    <View style={STYLES.carddashboard}>
+                        <Text style={{
+                            alignSelf: 'center',
+                            fontSize: 18,
+                            color: 'white',
+                            fontWeight: '800',
+                        }}>Hr Round </Text>
+                        <Text style={{ fontSize: 66, alignSelf: 'center' }}> {hrCount}</Text>
+                    </View>
                 </View>
             </View>
         </ScrollView>
